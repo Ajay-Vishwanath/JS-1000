@@ -3,7 +3,13 @@ import Oscillator from './oscillators';
 
 class Synth {
     
-    constructor(ctx) {
+    constructor() {
+        this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        this.notetable = new NoteTable();
+        new Oscillator({notetable: this.notetable, context: this.ctx})
         
     }
 }
+
+const y = new Oscillator();
+y.find(this.notetable)

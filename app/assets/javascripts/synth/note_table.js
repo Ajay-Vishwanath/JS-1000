@@ -1,14 +1,4 @@
-const audioCtx = new(window.AudioContext || window.webkitAudioContext)();
-
-const osc = audioCtx.createOscillator();
-const gain = audioCtx.createGain();
-const filter = audioCtx.createBiquadFilter(); 
-
-osc.connect(gain);
-gain.connect(filter);
-filter.connect(audioCtx.destination); 
-
-var octaveOne  = {
+var octaveOne = {
     '90': 65.406391325149658,  //Z - C
     '83': 69.295657744218024, //S - C#
     '88': 73.416191979351890,  //X - D
@@ -158,7 +148,7 @@ var octaveThree = {
     'Gsharp2': 830.609395159890277,
     'A2': 880.000000000000000,
     'Asharp2': 932.327523036179832,
-    'B2': 987.766602512248223,  
+    'B2': 987.766602512248223,
 }
 
 var octaveFour = {
@@ -263,120 +253,36 @@ var octaveFive = {
     'B2': 3951.066410048992894,
 }
 
-var keyboardFrequencyMap = octaveThree
+class NoteTable {
+    constructor(){
+        this.array = [octaveOne, octaveTwo, octaveThree, octaveFour,octaveFive]
+        this.octaveControl = document.getElementById('octave-control');
+        this.octave = this.array[2];
 
-window.addEventListener('keydown', keyDown, false);
-window.addEventListener('keyup', keyUp, false);
-window.addEventListener('mousedown', mouseDown, false);
-window.addEventListener('mouseup', mouseUp, false);
-const octave = document.getElementById('octave-control');
-octave.addEventListener('input', setOctave, false);
-
-let waveform = 'sine'
-const activeNotes = {};
-
-function setOctave(event) {
-    const input = (event.target.value).toString(); 
-    if (input === "1") {
-        keyboardFrequencyMap = octaveOne; 
-    }
-    
-    if (input === "2") {
-        keyboardFrequencyMap = octaveTwo;
+        this.octaveControl.addEventListener('input', setOctave, false);
     }
 
-    if (input === "3") {
-        keyboardFrequencyMap = octaveThree;
+    setOctave(event) {
+        const input = (event.target.value).toString();
+        if (input === "1") {
+            this.octave = this.array[0];
+        }
+
+        if (input === "2") {
+            this.octave = this.array[1];
+        }
+
+        if (input === "3") {
+            this.octave = this.array[2];
+        }
+
+        if (input === "4") {
+            this.octave = this.array[3];
+        }
+
+        if (input === "5") {
+            this.octave = this.array[4];
+        }
     }
 
-    if (input === "4") {
-        keyboardFrequencyMap = octaveFour; 
-    }
-
-    if (input === "5") {
-        keyboardFrequencyMap = octaveFive;
-    }
 }
-
-// keyboard control 
-function keyDown(event) {
-    const key = (event.detail || event.which).toString();
-    if (key === "32") {
-        Object.keys(activeNotes).forEach(function(key, i) {
-            let osc = activeNotes[key];
-            osc.stop();
-            delete activeNotes[key];
-        }); 
-    }
-    if (keyboardFrequencyMap[key] && !activeNotes[key]) {
-        playNote(key);
-
-    }
-}
-
-function keyUp(event) {
-    const key = (event.detail || event.which).toString();
-    if (keyboardFrequencyMap[key] && activeNotes[key]) {
-        activeNotes[key].stop();
-        delete activeNotes[key];
-    }
-}
-
-//piano control
-
-function mouseDown(event) {
-    const key = (event.target.id || event.which).toString();
-    if (keyboardFrequencyMap[key] && !activeNotes[key]) {
-        playNote(key);
-    }
-}
-
-function mouseUp(event) {
-    const key = (event.target.id || event.which).toString();
-    if (keyboardFrequencyMap[key] && activeNotes[key]) {
-        activeNotes[key].stop();
-        delete activeNotes[key];
-    }
-}
-
-//HANDLES CREATION & STORING OF Notes
-
-function playNote(key) {
-    const osc = audioCtx.createOscillator();
-    osc.frequency.setValueAtTime(keyboardFrequencyMap[key], audioCtx.currentTime)
-    osc.type = waveform
-    activeNotes[key] = osc
-    activeNotes[key].connect(gain)
-    activeNotes[key].start();
-}
-
-
-//controls for adjusting parameters 
-
-document.addEventListener("DOMContentLoaded", function(event) {
-    const waveformControl = document.getElementById('waveform')
-    waveformControl.addEventListener('change', function(event) {
-        waveform = event.target.value
-    }); 
-
-    const gainControl = document.getElementById('gain')
-    gainControl.addEventListener('change', function(event) {
-        gain.gain.setValueAtTime(event.target.value, audioCtx.currentTime)
-    });
-
-    const filterTypeControl = document.getElementById('filterType')
-    filterTypeControl.addEventListener('change', function(event) {
-        filter.type = event.target.value 
-    }); 
-
-    const filterFrequencyControl = document.getElementById('filterFrequency')
-    filterFrequencyControl.addEventListener('change', function(event) {
-        filter.frequency.setValueAtTime(event.target.value, audioCtx.currentTime)
-    });
-
-    const filterResonanceControl = document.getElementById('filterResonance')
-    filterResonanceControl.addEventListener('change', function (event) {
-        filter.Q.setValueAtTime(event.target.value, audioCtx.currentTime)
-    });
-})
-
