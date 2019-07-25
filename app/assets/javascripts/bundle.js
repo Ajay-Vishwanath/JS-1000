@@ -93,11 +93,11 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-var osc = audioCtx.createOscillator();
+var audioCtx = new (window.AudioContext || window.webkitAudioContext)(); // const osc = audioCtx.createOscillator();
+
 var gain = audioCtx.createGain();
-var filter = audioCtx.createBiquadFilter();
-osc.connect(gain);
+var filter = audioCtx.createBiquadFilter(); // osc.connect(gain);
+
 gain.connect(filter);
 filter.connect(audioCtx.destination);
 var octaveOne = {
@@ -554,6 +554,7 @@ function playNote(key) {
   osc.frequency.setValueAtTime(keyboardFrequencyMap[key], audioCtx.currentTime);
   osc.type = waveform;
   activeNotes[key] = osc;
+  debugger;
   activeNotes[key].connect(gain);
   activeNotes[key].start();
 } //controls for adjusting parameters 

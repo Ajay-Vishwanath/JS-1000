@@ -10,6 +10,3 @@ class Synth {
         
     }
 }
-
-const y = new Oscillator();
-y.find(this.notetable)

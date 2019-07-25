@@ -1,10 +1,10 @@
 const audioCtx = new(window.AudioContext || window.webkitAudioContext)();
 
-const osc = audioCtx.createOscillator();
-const gain = audioCtx.createGain();
+// const osc = audioCtx.createOscillator();
+const gain  = audioCtx.createGain();
 const filter = audioCtx.createBiquadFilter(); 
 
-osc.connect(gain);
+// osc.connect(gain);
 gain.connect(filter);
 filter.connect(audioCtx.destination); 
 
@@ -346,6 +346,7 @@ function playNote(key) {
     osc.frequency.setValueAtTime(keyboardFrequencyMap[key], audioCtx.currentTime)
     osc.type = waveform
     activeNotes[key] = osc
+    debugger 
     activeNotes[key].connect(gain)
     activeNotes[key].start();
 }
