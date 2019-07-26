@@ -251,52 +251,76 @@ var octaveTwo = {
 var octaveThree = {
   '90': 261.625565300598634,
   //Z - C
+  '90a': 'C',
   '83': 277.182630976872096,
   //S - C#
+  '83a': 'Csharp',
   '88': 293.664767917407560,
   //X - D
+  '88a': 'D',
   '68': 311.126983722080910,
   //D - D#
+  '68a': 'Dsharp',
   '67': 329.627556912869929,
   //C - E
+  '67a': 'E',
   '86': 349.228231433003884,
   //V - F
+  '86a': 'F',
   '71': 369.994422711634398,
   //G - F#
+  '71a': 'Fsharp',
   '66': 391.995435981749294,
   //B - G
+  '66a': 'G',
   '72': 415.304697579945138,
   //H - G#
+  '72a': 'Gsharp',
   '78': 440.000000000000000,
   //N - A
+  '78a': 'A',
   '74': 466.163761518089916,
   //J - A#
+  '74a': 'Asharp',
   '77': 493.883301256124111,
   //M - B
+  '77a': 'B',
   '81': 523.251130601197269,
   //Q - C
+  '81a': 'C2',
   '50': 554.365261953744192,
   //2 - C#
+  '50a': 'Csharp2',
   '87': 587.329535834815120,
   //W - D
+  '87a': 'D2',
   '51': 622.253967444161821,
   //3 - D#
+  '51a': 'Dsharp2',
   '69': 659.255113825739859,
   //E - E
+  '69a': 'E2',
   '82': 698.456462866007768,
   //R - F
+  '82a': 'F2',
   '53': 739.988845423268797,
   //5 - F#
+  '53a': 'Fsharp2',
   '84': 783.990871963498588,
   //T - G
+  '84a': 'G2',
   '54': 830.609395159890277,
   //6 - G#
+  '54a': 'Gsharp2',
   '89': 880.000000000000000,
   //Y - A
+  '89a': 'A2',
   '55': 932.327523036179832,
   //7 - A#
+  '55a': 'Asharp2',
   '85': 987.766602512248223,
   //U - B
+  '85a': 'B2',
   'C': 261.625565300598634,
   'Csharp': 277.182630976872096,
   'D': 293.664767917407560,
@@ -518,6 +542,9 @@ function keyDown(event) {
 
   if (keyboardFrequencyMap[key] && !activeNotes[key]) {
     playNote(key);
+    var div = keyboardFrequencyMap[key + 'a'];
+    var correspondingKey = document.getElementById(div);
+    correspondingKey.style.backgroundColor = '#ccf';
   }
 }
 
@@ -525,6 +552,9 @@ function keyUp(event) {
   var key = (event.detail || event.which).toString();
 
   if (keyboardFrequencyMap[key] && activeNotes[key]) {
+    var div = keyboardFrequencyMap[key + 'a'];
+    var correspondingKey = document.getElementById(div);
+    correspondingKey.style.backgroundColor = null;
     activeNotes[key].stop();
     delete activeNotes[key];
   }
@@ -536,6 +566,8 @@ function mouseDown(event) {
 
   if (keyboardFrequencyMap[key] && !activeNotes[key]) {
     playNote(key);
+    var correspondingKey = document.getElementById(key);
+    correspondingKey.style.backgroundColor = '#ccf';
   }
 }
 
@@ -543,6 +575,8 @@ function mouseUp(event) {
   var key = (event.target.id || event.which).toString();
 
   if (keyboardFrequencyMap[key] && activeNotes[key]) {
+    var correspondingKey = document.getElementById(key);
+    correspondingKey.style.backgroundColor = null;
     activeNotes[key].stop();
     delete activeNotes[key];
   }
@@ -554,7 +588,6 @@ function playNote(key) {
   osc.frequency.setValueAtTime(keyboardFrequencyMap[key], audioCtx.currentTime);
   osc.type = waveform;
   activeNotes[key] = osc;
-  debugger;
   activeNotes[key].connect(gain);
   activeNotes[key].start();
 } //controls for adjusting parameters 

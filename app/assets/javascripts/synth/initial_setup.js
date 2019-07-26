@@ -6,7 +6,7 @@ const filter = audioCtx.createBiquadFilter();
 
 // osc.connect(gain);
 gain.connect(filter);
-filter.connect(audioCtx.deynation); 
+filter.connect(audioCtx.destination); 
 
 var octaveOne  = {
     '90': 65.406391325149658,  //Z - C
@@ -335,13 +335,18 @@ function keyDown(event) {
     }
     if (keyboardFrequencyMap[key] && !activeNotes[key]) {
         playNote(key);
-
+        var div = keyboardFrequencyMap[key + 'a']
+        var correspondingKey = document.getElementById(div)
+        correspondingKey.style.backgroundColor = '#ccf'
     }
 }
 
 function keyUp(event) {
     const key = (event.detail || event.which).toString();
     if (keyboardFrequencyMap[key] && activeNotes[key]) {
+        var div = keyboardFrequencyMap[key+'a']
+        var correspondingKey = document.getElementById(div)
+        correspondingKey.style.backgroundColor = null; 
         activeNotes[key].stop();
         delete activeNotes[key];
     }
@@ -353,12 +358,16 @@ function mouseDown(event) {
     const key = (event.target.id || event.which).toString();
     if (keyboardFrequencyMap[key] && !activeNotes[key]) {
         playNote(key);
+        var correspondingKey = document.getElementById(key)
+        correspondingKey.style.backgroundColor = '#ccf'
     }
 }
 
 function mouseUp(event) {
     const key = (event.target.id || event.which).toString();
     if (keyboardFrequencyMap[key] && activeNotes[key]) {
+        var correspondingKey = document.getElementById(key)
+        correspondingKey.style.backgroundColor = null; 
         activeNotes[key].stop();
         delete activeNotes[key];
     }
@@ -374,14 +383,6 @@ function playNote(key) {
     activeNotes[key].connect(gain)
     activeNotes[key].start();
 
-    if (!isNaN(key) && keyboardFrequencyMap[key]) {
-        var div = keyboardFrequencyMap[key+'a']
-        var correspondingKey = document.getElementById(div)
-        correspondingKey.style.backgroundColor = '#ccf'
-    } else if (keyboardFrequencyMap[key]){
-        var correspondingKey = document.getElementById(key)
-        correspondingKey.style.backgroundColor = '#ccf'
-    }
 }
 
 
