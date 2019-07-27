@@ -4,13 +4,11 @@ class Oscillator {
     constructor(options){
         this.context = options.context
         this.osc = options.context.createOscillator();
-        this.osc.type = "sine";
         this.gain = options.context.createGain();
-        this.osc.connect(this.gain);
+
         this.waveformControl = document.getElementById('waveform');
-        this.waveformControl.addEventListener('change', function (event) {
-            this.osc.type = event.target.value
-        }); 
+        this.osc.type = this.waveformControl.value
+        this.waveformControl.addEventListener('change', this.setWaveform.bind(this), false);
 
         this.gainControl = document.getElementById('gain')
         this.gain.gain.value = this.gainControl.value
@@ -25,8 +23,12 @@ class Oscillator {
         }
     }
 
+    setWaveform(event){
+        this.osc.type = event.target.value
+    }
+    
+
     connect(connection) {
-        debugger 
         this.gain.connect(connection);
     }
 }

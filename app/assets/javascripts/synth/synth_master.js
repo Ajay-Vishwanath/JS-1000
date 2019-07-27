@@ -11,13 +11,27 @@ class Synth {
         this.oscillator = new Oscillator({context: this.ctx})
         this.filter = new Filter({context: this.ctx})
 
+        this.octaveControl = document.getElementById('octave-control');
+        this.octaveControl.addEventListener('input', this.setOctave.bind(this), false);
+
         this.activeNotes = {}
 
         window.addEventListener('keydown', this.keyDown.bind(this), false);
         window.addEventListener('keyup', this.keyUp.bind(this), false);
         window.addEventListener('mousedown', this.mouseDown.bind(this), false);
         window.addEventListener('mouseup', this.mouseUp.bind(this), false);
+        
+    }
 
+    setOctave(){
+        const activeNotes = this.activeNotes
+        const noteTable = this.notetable
+        if (this.activeNotes) {
+            Object.keys(this.activeNotes).forEach(function(activeNote){
+                let osc = activeNotes[activeNote]
+                osc.frequency.value = noteTable.octave[activeNote]
+            })
+        }
     }
 
     setUp(){

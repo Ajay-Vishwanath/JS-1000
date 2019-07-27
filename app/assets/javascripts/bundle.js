@@ -107,23 +107,35 @@ function () {
   function Filter(options) {
     _classCallCheck(this, Filter);
 
+    this.context = options.context;
     this.filter = options.context.createBiquadFilter();
-    this.filter.type = "lowpass";
     this.filterTypeControl = document.getElementById('filterType');
+    this.filter.type = this.filterTypeControl.value;
+    this.filterTypeControl.addEventListener('change', this.setFilterType.bind(this), false);
     this.filterFrequencyControl = document.getElementById('filterFrequency');
+    this.filter.frequency.value = this.filterFrequencyControl.value;
+    this.filterFrequencyControl.addEventListener('change', this.setFrequency.bind(this), false);
     this.filterResonanceControl = document.getElementById('filterResonance');
-    this.filterTypeControl.addEventListener('change', function (event) {
-      this.filter.type = event.target.value;
-    });
-    this.filterFrequencyControl.addEventListener('change', function (event) {
-      this.filter.frequency.setValueAtTime(event.target.value, options.context.currentTime);
-    });
-    this.filterResonanceControl.addEventListener('change', function (event) {
-      this.filter.Q.setValueAtTime(event.target.value, options.context.currentTime);
-    });
+    this.filter.Q.value = this.filterResonanceControl.value;
+    this.filterResonanceControl.addEventListener('change', this.setResonance.bind(this), false);
   }
 
   _createClass(Filter, [{
+    key: "setFilterType",
+    value: function setFilterType() {
+      this.filter.type = event.target.value;
+    }
+  }, {
+    key: "setFrequency",
+    value: function setFrequency() {
+      this.filter.frequency.setValueAtTime(event.target.value, this.context.currentTime);
+    }
+  }, {
+    key: "setResonance",
+    value: function setResonance() {
+      this.filter.Q.setValueAtTime(event.target.value, this.context.currentTime);
+    }
+  }, {
     key: "connect",
     value: function connect(connection) {
       this.filter.connect(connection);
@@ -622,13 +634,10 @@ function () {
 
     this.context = options.context;
     this.osc = options.context.createOscillator();
-    this.osc.type = "sine";
     this.gain = options.context.createGain();
-    this.osc.connect(this.gain);
     this.waveformControl = document.getElementById('waveform');
-    this.waveformControl.addEventListener('change', function (event) {
-      this.osc.type = event.target.value;
-    });
+    this.osc.type = this.waveformControl.value;
+    this.waveformControl.addEventListener('change', this.setWaveform.bind(this), false);
     this.gainControl = document.getElementById('gain');
     this.gain.gain.value = this.gainControl.value;
     this.gainControl.addEventListener('change', this.setGain.bind(this), false);
@@ -644,9 +653,13 @@ function () {
       }
     }
   }, {
+    key: "setWaveform",
+    value: function setWaveform(event) {
+      this.osc.type = event.target.value;
+    }
+  }, {
     key: "connect",
     value: function connect(connection) {
-      debugger;
       this.gain.connect(connection);
     }
   }]);
@@ -694,6 +707,8 @@ function () {
     this.filter = new _filters__WEBPACK_IMPORTED_MODULE_2__["default"]({
       context: this.ctx
     });
+    this.octaveControl = document.getElementById('octave-control');
+    this.octaveControl.addEventListener('input', this.setOctave.bind(this), false);
     this.activeNotes = {};
     window.addEventListener('keydown', this.keyDown.bind(this), false);
     window.addEventListener('keyup', this.keyUp.bind(this), false);
@@ -702,6 +717,19 @@ function () {
   }
 
   _createClass(Synth, [{
+    key: "setOctave",
+    value: function setOctave() {
+      var activeNotes = this.activeNotes;
+      var noteTable = this.notetable;
+
+      if (this.activeNotes) {
+        Object.keys(this.activeNotes).forEach(function (activeNote) {
+          var osc = activeNotes[activeNote];
+          osc.frequency.value = noteTable.octave[activeNote];
+        });
+      }
+    }
+  }, {
     key: "setUp",
     value: function setUp() {
       // this.connect(this.oscillator.osc, this.filter.filter)
@@ -815,7 +843,6 @@ function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_assets_javascripts_synth_synth_master__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../app/assets/javascripts/synth/synth_master */ "./app/assets/javascripts/synth/synth_master.js");
-// import '../app/assets/javascripts/synth/initial_setup';
 
 
 document.addEventListener("DOMContentLoaded", function () {
