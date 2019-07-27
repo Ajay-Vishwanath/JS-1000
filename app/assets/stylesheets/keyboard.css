@@ -23,8 +23,9 @@
 
 
 .black-key{
-    width: 45%;
-    height: 60%;
+    width: 42%;
+    height: 58%;
+    border: 1px solid black; 
     background: black; 
     float: right; 
     transform: translateX(15px);

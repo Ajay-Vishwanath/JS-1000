@@ -86,20 +86,72 @@
 /************************************************************************/
 /******/ ({
 
-/***/ "./app/assets/javascripts/synth/initial_setup.js":
-/*!*******************************************************!*\
-  !*** ./app/assets/javascripts/synth/initial_setup.js ***!
-  \*******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/***/ "./app/assets/javascripts/synth/filters.js":
+/*!*************************************************!*\
+  !*** ./app/assets/javascripts/synth/filters.js ***!
+  \*************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-var audioCtx = new (window.AudioContext || window.webkitAudioContext)(); // const osc = audioCtx.createOscillator();
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var gain = audioCtx.createGain();
-var filter = audioCtx.createBiquadFilter(); // osc.connect(gain);
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-gain.connect(filter);
-filter.connect(audioCtx.destination);
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Filter =
+/*#__PURE__*/
+function () {
+  function Filter(options) {
+    _classCallCheck(this, Filter);
+
+    this.filter = options.context.createBiquadFilter();
+    this.filter.type = "lowpass";
+    this.filterTypeControl = document.getElementById('filterType');
+    this.filterFrequencyControl = document.getElementById('filterFrequency');
+    this.filterResonanceControl = document.getElementById('filterResonance');
+    this.filterTypeControl.addEventListener('change', function (event) {
+      this.filter.type = event.target.value;
+    });
+    this.filterFrequencyControl.addEventListener('change', function (event) {
+      this.filter.frequency.setValueAtTime(event.target.value, options.context.currentTime);
+    });
+    this.filterResonanceControl.addEventListener('change', function (event) {
+      this.filter.Q.setValueAtTime(event.target.value, options.context.currentTime);
+    });
+  }
+
+  _createClass(Filter, [{
+    key: "connect",
+    value: function connect(connection) {
+      this.filter.connect(connection);
+    }
+  }]);
+
+  return Filter;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (Filter);
+
+/***/ }),
+
+/***/ "./app/assets/javascripts/synth/note_table.js":
+/*!****************************************************!*\
+  !*** ./app/assets/javascripts/synth/note_table.js ***!
+  \****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 var octaveOne = {
   '90': 65.406391325149658,
   //Z - C
@@ -496,127 +548,260 @@ var correspondingDiv = {
   '55a': 'Asharp2',
   '85a': 'B2'
 };
-var keyboardFrequencyMap = octaveThree;
-window.addEventListener('keydown', keyDown, false);
-window.addEventListener('keyup', keyUp, false);
-window.addEventListener('mousedown', mouseDown, false);
-window.addEventListener('mouseup', mouseUp, false);
-var octave = document.getElementById('octave-control');
-octave.addEventListener('input', setOctave, false);
-var waveform = 'sine';
-var activeNotes = {};
 
-function setOctave(event) {
-  var input = event.target.value.toString();
+var NoteTable =
+/*#__PURE__*/
+function () {
+  function NoteTable() {
+    _classCallCheck(this, NoteTable);
 
-  if (input === "1") {
-    keyboardFrequencyMap = octaveOne;
+    this.array = [octaveOne, octaveTwo, octaveThree, octaveFour, octaveFive];
+    this.octaveControl = document.getElementById('octave-control');
+    this.octave = this.array[2];
+    this.correspondingDiv = correspondingDiv;
+    this.octaveControl.addEventListener('input', this.setOctave.bind(this), false);
   }
 
-  if (input === "2") {
-    keyboardFrequencyMap = octaveTwo;
-  }
+  _createClass(NoteTable, [{
+    key: "setOctave",
+    value: function setOctave(event) {
+      var input = event.target.value.toString();
 
-  if (input === "3") {
-    keyboardFrequencyMap = octaveThree;
-  }
+      if (input === "1") {
+        this.octave = this.array[0];
+      }
 
-  if (input === "4") {
-    keyboardFrequencyMap = octaveFour;
-  }
+      if (input === "2") {
+        this.octave = this.array[1];
+      }
 
-  if (input === "5") {
-    keyboardFrequencyMap = octaveFive;
-  }
-} // keyboard control 
+      if (input === "3") {
+        this.octave = this.array[2];
+      }
+
+      if (input === "4") {
+        this.octave = this.array[3];
+      }
+
+      if (input === "5") {
+        this.octave = this.array[4];
+      }
+    }
+  }]);
+
+  return NoteTable;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (NoteTable);
+
+/***/ }),
+
+/***/ "./app/assets/javascripts/synth/oscillators.js":
+/*!*****************************************************!*\
+  !*** ./app/assets/javascripts/synth/oscillators.js ***!
+  \*****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _note_table__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./note_table */ "./app/assets/javascripts/synth/note_table.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 
-function keyDown(event) {
-  var key = (event.detail || event.which).toString();
 
-  if (key === "32") {
-    Object.keys(activeNotes).forEach(function (key, i) {
-      var osc = activeNotes[key];
-      osc.stop();
-      delete activeNotes[key];
+var Oscillator =
+/*#__PURE__*/
+function () {
+  function Oscillator(options) {
+    _classCallCheck(this, Oscillator);
+
+    this.context = options.context;
+    this.osc = options.context.createOscillator();
+    this.osc.type = "sine";
+    this.gain = options.context.createGain();
+    this.osc.connect(this.gain);
+    this.waveformControl = document.getElementById('waveform');
+    this.waveformControl.addEventListener('change', function (event) {
+      this.osc.type = event.target.value;
     });
+    this.gainControl = document.getElementById('gain');
+    this.gain.gain.value = this.gainControl.value;
+    this.gainControl.addEventListener('change', this.setGain.bind(this), false);
   }
 
-  if (keyboardFrequencyMap[key] && !activeNotes[key]) {
-    playNote(key);
-    var div = correspondingDiv[key + 'a'];
-    var correspondingKey = document.getElementById(div);
-    correspondingKey.style.backgroundColor = '#ccf';
+  _createClass(Oscillator, [{
+    key: "setGain",
+    value: function setGain(event) {
+      var value = parseFloat(event.target.value);
+
+      if (isFinite(value)) {
+        this.gain.gain.value = value;
+      }
+    }
+  }, {
+    key: "connect",
+    value: function connect(connection) {
+      debugger;
+      this.gain.connect(connection);
+    }
+  }]);
+
+  return Oscillator;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (Oscillator);
+
+/***/ }),
+
+/***/ "./app/assets/javascripts/synth/synth_master.js":
+/*!******************************************************!*\
+  !*** ./app/assets/javascripts/synth/synth_master.js ***!
+  \******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _note_table__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./note_table */ "./app/assets/javascripts/synth/note_table.js");
+/* harmony import */ var _oscillators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./oscillators */ "./app/assets/javascripts/synth/oscillators.js");
+/* harmony import */ var _filters__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./filters */ "./app/assets/javascripts/synth/filters.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+
+
+var Synth =
+/*#__PURE__*/
+function () {
+  function Synth() {
+    _classCallCheck(this, Synth);
+
+    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    this.notetable = new _note_table__WEBPACK_IMPORTED_MODULE_0__["default"]();
+    this.oscillator = new _oscillators__WEBPACK_IMPORTED_MODULE_1__["default"]({
+      context: this.ctx
+    });
+    this.filter = new _filters__WEBPACK_IMPORTED_MODULE_2__["default"]({
+      context: this.ctx
+    });
+    this.activeNotes = {};
+    window.addEventListener('keydown', this.keyDown.bind(this), false);
+    window.addEventListener('keyup', this.keyUp.bind(this), false);
+    window.addEventListener('mousedown', this.mouseDown.bind(this), false);
+    window.addEventListener('mouseup', this.mouseUp.bind(this), false);
   }
-}
 
-function keyUp(event) {
-  var key = (event.detail || event.which).toString();
+  _createClass(Synth, [{
+    key: "setUp",
+    value: function setUp() {
+      // this.connect(this.oscillator.osc, this.filter.filter)
+      this.connect(this.filter.filter, this.ctx.destination);
+    }
+  }, {
+    key: "connect",
+    value: function connect(a, b) {
+      a.connect(b);
+    } // keyboard control 
 
-  if (keyboardFrequencyMap[key] && activeNotes[key]) {
-    var div = correspondingDiv[key + 'a'];
-    var correspondingKey = document.getElementById(div);
-    correspondingKey.style.backgroundColor = null;
-    activeNotes[key].stop();
-    delete activeNotes[key];
-  }
-} //piano control
+  }, {
+    key: "keyDown",
+    value: function keyDown(event) {
+      var key = (event.detail || event.which).toString();
 
+      if (key === "32") {
+        var activeNotes = this.activeNotes;
+        var correspondingDiv = this.notetable.correspondingDiv;
+        Object.keys(this.activeNotes).forEach(function (activeNote, i) {
+          debugger;
 
-function mouseDown(event) {
-  var key = (event.target.id || event.which).toString();
+          if (!isNaN(activeNote)) {
+            var div = correspondingDiv[activeNote + 'a'];
+            var correspondingKey = document.getElementById(div);
+            correspondingKey.style.backgroundColor = null;
+          } else {
+            var correspondingKey = document.getElementById(activeNote);
+            correspondingKey.style.backgroundColor = null;
+          }
 
-  if (keyboardFrequencyMap[key] && !activeNotes[key]) {
-    playNote(key);
-    var correspondingKey = document.getElementById(key);
-    correspondingKey.style.backgroundColor = '#ccf';
-  }
-}
+          var osc = activeNotes[activeNote];
+          osc.stop();
+          delete activeNotes[activeNote];
+        });
+      }
 
-function mouseUp(event) {
-  var key = (event.target.id || event.which).toString();
+      if (this.notetable.octave[key] && !this.activeNotes[key]) {
+        this.playNote(key);
+        var div = this.notetable.correspondingDiv[key + 'a'];
+        var correspondingKey = document.getElementById(div);
+        correspondingKey.style.backgroundColor = '#ccf';
+      }
+    }
+  }, {
+    key: "keyUp",
+    value: function keyUp(event) {
+      var key = (event.detail || event.which).toString();
 
-  if (keyboardFrequencyMap[key] && activeNotes[key]) {
-    var correspondingKey = document.getElementById(key);
-    correspondingKey.style.backgroundColor = null;
-    activeNotes[key].stop();
-    delete activeNotes[key];
-  }
-} //HANDLES CREATION & STORING OF Notes
+      if (this.notetable.octave[key] && this.activeNotes[key]) {
+        var div = this.notetable.correspondingDiv[key + 'a'];
+        var correspondingKey = document.getElementById(div);
+        correspondingKey.style.backgroundColor = null;
+        this.activeNotes[key].stop();
+        delete this.activeNotes[key];
+      }
+    } //piano control
 
+  }, {
+    key: "mouseDown",
+    value: function mouseDown(event) {
+      var key = (event.target.id || event.which).toString();
 
-function playNote(key) {
-  var osc = audioCtx.createOscillator();
-  osc.frequency.setValueAtTime(keyboardFrequencyMap[key], audioCtx.currentTime);
-  osc.type = waveform;
-  activeNotes[key] = osc;
-  activeNotes[key].connect(gain);
-  activeNotes[key].start();
-} //controls for adjusting parameters 
+      if (this.notetable.octave[key] && !this.activeNotes[key]) {
+        this.playNote(key);
+        var correspondingKey = document.getElementById(key);
+        correspondingKey.style.backgroundColor = '#ccf';
+      }
+    }
+  }, {
+    key: "mouseUp",
+    value: function mouseUp(event) {
+      var key = (event.target.id || event.which).toString();
 
+      if (this.notetable.octave[key] && this.activeNotes[key]) {
+        var correspondingKey = document.getElementById(key);
+        correspondingKey.style.backgroundColor = null;
+        this.activeNotes[key].stop();
+        delete this.activeNotes[key];
+      }
+    } //HANDLES CREATION & STORING OF Notes
 
-document.addEventListener("DOMContentLoaded", function (event) {
-  var waveformControl = document.getElementById('waveform');
-  waveformControl.addEventListener('change', function (event) {
-    waveform = event.target.value;
-  });
-  var gainControl = document.getElementById('gain');
-  gainControl.addEventListener('change', function (event) {
-    gain.gain.setValueAtTime(event.target.value, audioCtx.currentTime);
-  });
-  var filterTypeControl = document.getElementById('filterType');
-  filterTypeControl.addEventListener('change', function (event) {
-    filter.type = event.target.value;
-  });
-  var filterFrequencyControl = document.getElementById('filterFrequency');
-  filterFrequencyControl.addEventListener('change', function (event) {
-    filter.frequency.setValueAtTime(event.target.value, audioCtx.currentTime);
-  });
-  var filterResonanceControl = document.getElementById('filterResonance');
-  filterResonanceControl.addEventListener('change', function (event) {
-    filter.Q.setValueAtTime(event.target.value, audioCtx.currentTime);
-  });
-});
+  }, {
+    key: "playNote",
+    value: function playNote(key) {
+      var osc = new _oscillators__WEBPACK_IMPORTED_MODULE_1__["default"]({
+        context: this.ctx
+      });
+      osc.osc.frequency.setValueAtTime(this.notetable.octave[key], this.ctx.currentTime);
+      this.activeNotes[key] = osc.osc;
+      this.activeNotes[key].start();
+      this.connect(this.activeNotes[key], osc.gain);
+      this.connect(osc.gain, this.filter.filter);
+    }
+  }]);
+
+  return Synth;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (Synth);
 
 /***/ }),
 
@@ -629,9 +814,14 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _app_assets_javascripts_synth_initial_setup__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../app/assets/javascripts/synth/initial_setup */ "./app/assets/javascripts/synth/initial_setup.js");
-/* harmony import */ var _app_assets_javascripts_synth_initial_setup__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_app_assets_javascripts_synth_initial_setup__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _app_assets_javascripts_synth_synth_master__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../app/assets/javascripts/synth/synth_master */ "./app/assets/javascripts/synth/synth_master.js");
+// import '../app/assets/javascripts/synth/initial_setup';
 
+
+document.addEventListener("DOMContentLoaded", function () {
+  var synthesizer = new _app_assets_javascripts_synth_synth_master__WEBPACK_IMPORTED_MODULE_0__["default"]();
+  synthesizer.setUp();
+});
 
 /***/ })
 

@@ -2,74 +2,31 @@ import NoteTable from './note_table';
 
 class Oscillator {
     constructor(options){
-        this.notetable = options.notetable
-        this.node = options.context.createOscillator();
+        this.context = options.context
+        this.osc = options.context.createOscillator();
+        this.osc.type = "sine";
+        this.gain = options.context.createGain();
+        this.osc.connect(this.gain);
         this.waveformControl = document.getElementById('waveform');
-        this.waveform = "sine";
-        this.gain = options.context.createGain(); 
-        this.gainControl = document.getElementById('gain')
-        this.node.connect(this.gain)
-        this.activeNotes = {}; 
-
-
-        window.addEventListener('keydown', keyDown, false);
-        window.addEventListener('keyup', keyUp, false);
-        window.addEventListener('mousedown', mouseDown, false);
-        window.addEventListener('mouseup', mouseUp, false);
         this.waveformControl.addEventListener('change', function (event) {
-            this.waveform = event.target.value
+            this.osc.type = event.target.value
         }); 
-        this.gainControl.addEventListener('change', function (event) {
-            gain.gain.setValueAtTime(event.target.value, options.context.currentTime)
-        });
-    }
-    
-    keyDown(event) {
-        const key = (event.detail || event.which).toString();
-        if (key === "32") {
-            Object.keys(this.activeNotes).forEach(function (key, i) {
-                let osc = this.activeNotes[key];
-                osc.stop();
-                delete this.activeNotes[key];
-            });
-        }
-        if (this.notetable.octave[key] && !this.activeNotes[key]) {
-            this.playNote(key);
-        }
+
+        this.gainControl = document.getElementById('gain')
+        this.gain.gain.value = this.gainControl.value
+        this.gainControl.addEventListener('change', this.setGain.bind(this), false);
     }
 
-    keyUp(event) {
-        const key = (event.detail || event.which).toString();
-        if (this.notetable.octave[key] && this.activeNotes[key]) {
-            this.activeNotes[key].stop();
-            delete this.activeNotes[key];
-        }
-    };
+    setGain(event){
+        let value = parseFloat(event.target.value)
 
-    mouseDown(event) {
-        const key = (event.target.id || event.which).toString();
-        if (this.notetable.octave[key] && !this.activeNotes[key]) {
-            this.playNote(key);
+        if (isFinite(value)) {
+            this.gain.gain.value = value
         }
-    }
-
-    mouseUp(event) {
-        const key = (event.target.id || event.which).toString();
-        if (this.notetable.octave[key] && this.activeNotes[key]) {
-            this.activeNotes[key].stop();
-            delete this.activeNotes[key];
-        }
-    }
-
-    playNote(key) {
-        this.node.frequency.setValueAtTime(this.notetable.octave[key], options.context.currentTime)
-        this.node.type = this.waveform
-        this.activeNotes[key] = this.node
-        this.activeNotes[key].connect(gain)
-        this.activeNotes[key].start();
     }
 
     connect(connection) {
+        debugger 
         this.gain.connect(connection);
     }
 }

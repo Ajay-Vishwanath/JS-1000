@@ -1,14 +1,10 @@
-import Oscillator from './oscillators';
-
 class Filter {
     constructor(options){
-        this.filter = options.context.createBiquadFilter
-        this.filterControl = document.getElementById('filterType')
+        this.filter = options.context.createBiquadFilter();
         this.filter.type = "lowpass";
+        this.filterTypeControl = document.getElementById('filterType')
         this.filterFrequencyControl = document.getElementById('filterFrequency')
-        this.filter.frequency = "400.0";
         this.filterResonanceControl = document.getElementById('filterResonance')
-        this.filter.resonance = "1"
 
         this.filterTypeControl.addEventListener('change', function (event) {
             this.filter.type = event.target.value

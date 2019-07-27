@@ -253,13 +253,41 @@ var octaveFive = {
     'B2': 3951.066410048992894,
 }
 
+var correspondingDiv = {
+    '90a': 'C',
+    '83a': 'Csharp',
+    '88a': 'D',
+    '68a': 'Dsharp',
+    '67a': 'E',
+    '86a': 'F',
+    '71a': 'Fsharp',
+    '66a': 'G',
+    '72a': 'Gsharp',
+    '78a': 'A',
+    '74a': 'Asharp',
+    '77a': 'B',
+    '81a': 'C2',
+    '50a': 'Csharp2',
+    '87a': 'D2',
+    '51a': 'Dsharp2',
+    '69a': 'E2',
+    '82a': 'F2',
+    '53a': 'Fsharp2',
+    '84a': 'G2',
+    '54a': 'Gsharp2',
+    '89a': 'A2',
+    '55a': 'Asharp2',
+    '85a': 'B2',
+}
+
 class NoteTable {
     constructor(){
         this.array = [octaveOne, octaveTwo, octaveThree, octaveFour,octaveFive]
         this.octaveControl = document.getElementById('octave-control');
         this.octave = this.array[2];
+        this.correspondingDiv = correspondingDiv
 
-        this.octaveControl.addEventListener('input', setOctave, false);
+        this.octaveControl.addEventListener('input', this.setOctave.bind(this), false);
     }
 
     setOctave(event) {
@@ -286,3 +314,5 @@ class NoteTable {
     }
 
 }
+
+export default NoteTable;
