@@ -17,10 +17,6 @@
                     <span>Master Volume</span>
                     <input type="range" min="0.0" max="1.0" step="0.01"
                     value="0.5" list="volumes" id="volume">
-                    <datalist id="volumes">
-                        <option value="0.0" label="Mute">
-                        <option value="1.0" label="100%">
-                    </datalist>
                 </div>
 
                 <div class="octave-control">
@@ -56,6 +52,17 @@
                     step="10" value="350.0">
                     <span>Filter Resonance:</span>
                     <input id="filterResonance" type="range" min="1.0" max="30.0" step=".05" value="1">
+                </div>
+            </div>
+            <div class="asdr-envelope">
+                <span>Amp Envelope:</span>
+                <div id="asdr-controls">
+                    <span>Attack:</span>
+                    <input type="range" min="0" max="2" step=".1" 
+                    value="0" id="attack-envelope">
+                    <span>Release:</span>
+                    <input type="range" min="0" max ="2" step=".1"
+                    value="0" id="release-envelope">
                 </div>
             </div>
         </div>

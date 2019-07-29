@@ -11,15 +11,18 @@ class Oscillator {
         this.waveformControl.addEventListener('change', this.setWaveform.bind(this), false);
 
         this.gainControl = document.getElementById('gain')
-        this.gain.gain.value = this.gainControl.value
+        this.testing = this.gainControl.value
         this.gainControl.addEventListener('change', this.setGain.bind(this), false);
+        this.gain.gain.value = 0; 
+        debugger 
+        this.gain.gain.linearRampToValueAtTime(this.testing, this.context.currentTime + options.envelope.attackTime)
     }
 
     setGain(event){
         let value = parseFloat(event.target.value)
 
         if (isFinite(value)) {
-            this.gain.gain.value = value
+            this.testing = value
         }
     }
 

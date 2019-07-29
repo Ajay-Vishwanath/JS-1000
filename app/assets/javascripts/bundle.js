@@ -86,6 +86,55 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./app/assets/javascripts/synth/envelopes.js":
+/*!***************************************************!*\
+  !*** ./app/assets/javascripts/synth/envelopes.js ***!
+  \***************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Envelope =
+/*#__PURE__*/
+function () {
+  function Envelope(options) {
+    _classCallCheck(this, Envelope);
+
+    this.context = options.context;
+    this.attackTimeInput = document.getElementById("attack-envelope");
+    this.attackTime = this.attackTimeInput.value;
+    this.attackTimeInput.addEventListener('change', this.setAttack.bind(this), false);
+    this.releaseTimeInput = document.getElementById("release-envelope");
+    this.releaseTime = this.releaseTimeInput.value;
+    this.releaseTimeInput.addEventListener('change', this.setRelease.bind(this), false);
+  }
+
+  _createClass(Envelope, [{
+    key: "setAttack",
+    value: function setAttack() {
+      this.attackTime = parseFloat(event.target.value);
+    }
+  }, {
+    key: "setRelease",
+    value: function setRelease() {
+      this.releaseTime = parseFloat(event.target.value);
+    }
+  }]);
+
+  return Envelope;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (Envelope);
+
+/***/ }),
+
 /***/ "./app/assets/javascripts/synth/filters.js":
 /*!*************************************************!*\
   !*** ./app/assets/javascripts/synth/filters.js ***!
@@ -639,8 +688,11 @@ function () {
     this.osc.type = this.waveformControl.value;
     this.waveformControl.addEventListener('change', this.setWaveform.bind(this), false);
     this.gainControl = document.getElementById('gain');
-    this.gain.gain.value = this.gainControl.value;
+    this.testing = this.gainControl.value;
     this.gainControl.addEventListener('change', this.setGain.bind(this), false);
+    this.gain.gain.value = 0;
+    debugger;
+    this.gain.gain.linearRampToValueAtTime(this.testing, this.context.currentTime + options.envelope.attackTime);
   }
 
   _createClass(Oscillator, [{
@@ -649,7 +701,7 @@ function () {
       var value = parseFloat(event.target.value);
 
       if (isFinite(value)) {
-        this.gain.gain.value = value;
+        this.testing = value;
       }
     }
   }, {
@@ -683,11 +735,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _note_table__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./note_table */ "./app/assets/javascripts/synth/note_table.js");
 /* harmony import */ var _oscillators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./oscillators */ "./app/assets/javascripts/synth/oscillators.js");
 /* harmony import */ var _filters__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./filters */ "./app/assets/javascripts/synth/filters.js");
+/* harmony import */ var _envelopes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./envelopes */ "./app/assets/javascripts/synth/envelopes.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 
 
 
@@ -701,8 +755,12 @@ function () {
 
     this.ctx = new (window.AudioContext || window.webkitAudioContext)();
     this.notetable = new _note_table__WEBPACK_IMPORTED_MODULE_0__["default"]();
-    this.oscillator = new _oscillators__WEBPACK_IMPORTED_MODULE_1__["default"]({
+    this.envelope = new _envelopes__WEBPACK_IMPORTED_MODULE_3__["default"]({
       context: this.ctx
+    });
+    this.oscillator = new _oscillators__WEBPACK_IMPORTED_MODULE_1__["default"]({
+      context: this.ctx,
+      envelope: this.envelope
     });
     this.filter = new _filters__WEBPACK_IMPORTED_MODULE_2__["default"]({
       context: this.ctx
@@ -719,6 +777,7 @@ function () {
   _createClass(Synth, [{
     key: "setOctave",
     value: function setOctave() {
+      zczq;
       var activeNotes = this.activeNotes;
       var noteTable = this.notetable;
 
@@ -816,7 +875,8 @@ function () {
     key: "playNote",
     value: function playNote(key) {
       var osc = new _oscillators__WEBPACK_IMPORTED_MODULE_1__["default"]({
-        context: this.ctx
+        context: this.ctx,
+        envelope: this.envelope
       });
       osc.osc.frequency.setValueAtTime(this.notetable.octave[key], this.ctx.currentTime);
       this.activeNotes[key] = osc.osc;

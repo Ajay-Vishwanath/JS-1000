@@ -1,6 +1,7 @@
 import NoteTable from './note_table';
 import Oscillator from './oscillators';
 import Filter from './filters'; 
+import Envelope from './envelopes';
 
 
 class Synth {
@@ -8,7 +9,8 @@ class Synth {
     constructor() {
         this.ctx = new (window.AudioContext || window.webkitAudioContext)();
         this.notetable = new NoteTable();
-        this.oscillator = new Oscillator({context: this.ctx})
+        this.envelope = new Envelope({ context: this.ctx })
+        this.oscillator = new Oscillator({context: this.ctx, envelope: this.envelope})
         this.filter = new Filter({context: this.ctx})
 
         this.octaveControl = document.getElementById('octave-control');
@@ -23,7 +25,7 @@ class Synth {
         
     }
 
-    setOctave(){
+    setOctave(){zczq
         const activeNotes = this.activeNotes
         const noteTable = this.notetable
         if (this.activeNotes) {
@@ -109,7 +111,7 @@ class Synth {
 //HANDLES CREATION & STORING OF Notes
 
     playNote(key) {
-        const osc = new Oscillator({ context: this.ctx })
+        const osc = new Oscillator({ context: this.ctx, envelope: this.envelope})
         osc.osc.frequency.setValueAtTime(this.notetable.octave[key], this.ctx.currentTime)
         this.activeNotes[key] = osc.osc
         this.activeNotes[key].start();
