@@ -14,8 +14,12 @@ class Oscillator {
         this.testing = this.gainControl.value
         this.gainControl.addEventListener('change', this.setGain.bind(this), false);
         this.gain.gain.value = 0; 
-        debugger 
         this.gain.gain.linearRampToValueAtTime(this.testing, this.context.currentTime + options.envelope.attackTime)
+        
+    }
+
+    releaseNote(){
+        this.gain.gain.linearRampToValueAtTime(0, this.context.currentTime + options.envelope.releaseTime)
     }
 
     setGain(event){

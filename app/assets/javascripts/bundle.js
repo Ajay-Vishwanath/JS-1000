@@ -691,11 +691,15 @@ function () {
     this.testing = this.gainControl.value;
     this.gainControl.addEventListener('change', this.setGain.bind(this), false);
     this.gain.gain.value = 0;
-    debugger;
     this.gain.gain.linearRampToValueAtTime(this.testing, this.context.currentTime + options.envelope.attackTime);
   }
 
   _createClass(Oscillator, [{
+    key: "releaseNote",
+    value: function releaseNote() {
+      this.gain.gain.linearRampToValueAtTime(0, this.context.currentTime + options.envelope.releaseTime);
+    }
+  }, {
     key: "setGain",
     value: function setGain(event) {
       var value = parseFloat(event.target.value);
