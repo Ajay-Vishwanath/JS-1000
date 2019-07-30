@@ -83,7 +83,6 @@ class Synth {
             correspondingKey.style.backgroundColor = null;
             this.activeNotes[key].releaseNote();
             delete this.activeNotes[key];
-            debugger 
         }
     }
 

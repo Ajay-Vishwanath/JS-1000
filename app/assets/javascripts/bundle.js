@@ -690,8 +690,8 @@ function () {
     this.gainControl = document.getElementById('gain');
     this.testing = this.gainControl.value;
     this.gainControl.addEventListener('change', this.setGain.bind(this), false);
-    this.attackTime = options.envelope.attackTime;
-    this.releaseTime = options.envelope.releaseTime;
+    this.attackTime = parseFloat(options.envelope.attackTime);
+    this.releaseTime = parseFloat(options.envelope.releaseTime);
   }
 
   _createClass(Oscillator, [{
@@ -704,8 +704,7 @@ function () {
   }, {
     key: "releaseNote",
     value: function releaseNote() {
-      this.gain.gain.linearRampToValueAtTime(0, this.context.currentTime + this.attackTime + this.releaseTime);
-      debugger; // setTimeout(function(){this.osc.stop();}, (this.releaseTime * 1000))
+      this.gain.gain.linearRampToValueAtTime(0, this.context.currentTime + this.attackTime + this.releaseTime); // setTimeout(function(){this.osc.stop();}, (this.releaseTime * 1000))
     }
   }, {
     key: "setGain",
@@ -854,7 +853,6 @@ function () {
         correspondingKey.style.backgroundColor = null;
         this.activeNotes[key].releaseNote();
         delete this.activeNotes[key];
-        debugger;
       }
     } //piano control
 
