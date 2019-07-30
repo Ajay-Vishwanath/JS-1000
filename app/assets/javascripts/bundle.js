@@ -690,14 +690,22 @@ function () {
     this.gainControl = document.getElementById('gain');
     this.testing = this.gainControl.value;
     this.gainControl.addEventListener('change', this.setGain.bind(this), false);
-    this.gain.gain.value = 0;
-    this.gain.gain.linearRampToValueAtTime(this.testing, this.context.currentTime + options.envelope.attackTime);
+    this.attackTime = options.envelope.attackTime;
+    this.releaseTime = options.envelope.releaseTime;
   }
 
   _createClass(Oscillator, [{
+    key: "playNote",
+    value: function playNote() {
+      this.osc.start();
+      this.gain.gain.value = 0;
+      this.gain.gain.linearRampToValueAtTime(this.testing, this.context.currentTime + this.attackTime);
+    }
+  }, {
     key: "releaseNote",
     value: function releaseNote() {
-      this.gain.gain.linearRampToValueAtTime(0, this.context.currentTime + options.envelope.releaseTime);
+      this.gain.gain.linearRampToValueAtTime(0, this.context.currentTime + this.attackTime + this.releaseTime);
+      debugger; // setTimeout(function(){this.osc.stop();}, (this.releaseTime * 1000))
     }
   }, {
     key: "setGain",
@@ -813,8 +821,6 @@ function () {
         var activeNotes = this.activeNotes;
         var correspondingDiv = this.notetable.correspondingDiv;
         Object.keys(this.activeNotes).forEach(function (activeNote, i) {
-          debugger;
-
           if (!isNaN(activeNote)) {
             var div = correspondingDiv[activeNote + 'a'];
             var correspondingKey = document.getElementById(div);
@@ -825,7 +831,7 @@ function () {
           }
 
           var osc = activeNotes[activeNote];
-          osc.stop();
+          osc.releaseNote();
           delete activeNotes[activeNote];
         });
       }
@@ -846,8 +852,9 @@ function () {
         var div = this.notetable.correspondingDiv[key + 'a'];
         var correspondingKey = document.getElementById(div);
         correspondingKey.style.backgroundColor = null;
-        this.activeNotes[key].stop();
+        this.activeNotes[key].releaseNote();
         delete this.activeNotes[key];
+        debugger;
       }
     } //piano control
 
@@ -883,9 +890,9 @@ function () {
         envelope: this.envelope
       });
       osc.osc.frequency.setValueAtTime(this.notetable.octave[key], this.ctx.currentTime);
-      this.activeNotes[key] = osc.osc;
-      this.activeNotes[key].start();
-      this.connect(this.activeNotes[key], osc.gain);
+      this.activeNotes[key] = osc;
+      this.activeNotes[key].playNote();
+      this.connect(this.activeNotes[key].osc, osc.gain);
       this.connect(osc.gain, this.filter.filter);
     }
   }]);

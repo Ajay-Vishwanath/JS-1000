@@ -13,13 +13,22 @@ class Oscillator {
         this.gainControl = document.getElementById('gain')
         this.testing = this.gainControl.value
         this.gainControl.addEventListener('change', this.setGain.bind(this), false);
-        this.gain.gain.value = 0; 
-        this.gain.gain.linearRampToValueAtTime(this.testing, this.context.currentTime + options.envelope.attackTime)
+
+        this.attackTime = options.envelope.attackTime
+        this.releaseTime = options.envelope.releaseTime
         
     }
 
+    playNote(){
+        this.osc.start();
+        this.gain.gain.value = 0;
+        this.gain.gain.linearRampToValueAtTime(this.testing, this.context.currentTime + this.attackTime)
+    }
+
     releaseNote(){
-        this.gain.gain.linearRampToValueAtTime(0, this.context.currentTime + options.envelope.releaseTime)
+        this.gain.gain.linearRampToValueAtTime(0, this.context.currentTime + this.attackTime + this.releaseTime)
+        debugger 
+        // setTimeout(function(){this.osc.stop();}, (this.releaseTime * 1000))
     }
 
     setGain(event){

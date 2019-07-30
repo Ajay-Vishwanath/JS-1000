@@ -51,8 +51,7 @@ class Synth {
         if (key === "32") {
             const activeNotes = this.activeNotes;  
             const correspondingDiv = this.notetable.correspondingDiv
-            Object.keys(this.activeNotes).forEach(function (activeNote, i) {
-                debugger 
+            Object.keys(this.activeNotes).forEach(function (activeNote, i) { 
                 if (!isNaN(activeNote)) {
                     var div = correspondingDiv[activeNote + 'a']
                     var correspondingKey = document.getElementById(div)
@@ -63,7 +62,7 @@ class Synth {
                 }
 
                 let osc = activeNotes[activeNote];
-                osc.stop();
+                osc.releaseNote();
                 delete activeNotes[activeNote];
                 
             });
@@ -82,8 +81,9 @@ class Synth {
             var div = this.notetable.correspondingDiv[key + 'a']
             var correspondingKey = document.getElementById(div)
             correspondingKey.style.backgroundColor = null;
-            this.activeNotes[key].stop();
+            this.activeNotes[key].releaseNote();
             delete this.activeNotes[key];
+            debugger 
         }
     }
 
@@ -113,9 +113,9 @@ class Synth {
     playNote(key) {
         const osc = new Oscillator({ context: this.ctx, envelope: this.envelope})
         osc.osc.frequency.setValueAtTime(this.notetable.octave[key], this.ctx.currentTime)
-        this.activeNotes[key] = osc.osc
-        this.activeNotes[key].start();
-        this.connect(this.activeNotes[key], osc.gain)
+        this.activeNotes[key] = osc
+        this.activeNotes[key].playNote();
+        this.connect(this.activeNotes[key].osc, osc.gain)
         this.connect(osc.gain, this.filter.filter)
     }
 }
