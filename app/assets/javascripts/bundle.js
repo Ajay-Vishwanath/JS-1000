@@ -788,13 +788,12 @@ function () {
   _createClass(Synth, [{
     key: "setOctave",
     value: function setOctave() {
-      zczq;
       var activeNotes = this.activeNotes;
       var noteTable = this.notetable;
 
       if (this.activeNotes) {
         Object.keys(this.activeNotes).forEach(function (activeNote) {
-          var osc = activeNotes[activeNote];
+          var osc = activeNotes[activeNote].osc;
           osc.frequency.value = noteTable.octave[activeNote];
         });
       }
@@ -875,7 +874,7 @@ function () {
       if (this.notetable.octave[key] && this.activeNotes[key]) {
         var correspondingKey = document.getElementById(key);
         correspondingKey.style.backgroundColor = null;
-        this.activeNotes[key].stop();
+        this.activeNotes[key].releaseNote();
         delete this.activeNotes[key];
       }
     } //HANDLES CREATION & STORING OF Notes

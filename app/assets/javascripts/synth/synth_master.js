@@ -25,12 +25,12 @@ class Synth {
         
     }
 
-    setOctave(){zczq
+    setOctave(){
         const activeNotes = this.activeNotes
         const noteTable = this.notetable
         if (this.activeNotes) {
             Object.keys(this.activeNotes).forEach(function(activeNote){
-                let osc = activeNotes[activeNote]
+                let osc = activeNotes[activeNote].osc
                 osc.frequency.value = noteTable.octave[activeNote]
             })
         }
@@ -102,7 +102,7 @@ class Synth {
         if (this.notetable.octave[key] && this.activeNotes[key]) {
             var correspondingKey = document.getElementById(key)
             correspondingKey.style.backgroundColor = null;
-            this.activeNotes[key].stop();
+            this.activeNotes[key].releaseNote();
             delete this.activeNotes[key];
         }
     }
