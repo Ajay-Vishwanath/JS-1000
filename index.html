@@ -54,9 +54,14 @@
                     <input id="filterResonance" type="range" min="1.0" max="30.0" step=".05" value="1">
                 </div>
             </div>
-            <div class="asdr-envelope">
+            <div class="lfo-section">
                 <span>LFO:</span>
-                <div id="asdr-controls">
+                <div id="lfo-buttons">
+                    <button class="lfo-button" id="lfo-amp">Volume</button>
+                    <button class="lfo-button" id="lfo-pitch">Pitch</button>
+                    <button class="lfo-button" id="lfo-filter">Filter</button>
+                </div>
+                <div id="lfo-controls">
                     <span>Depth:</span>
                     <input type="range" min="0" max="1" step=".05" value="0" id="lfo-depth">
                     <span>Frequency:</span>

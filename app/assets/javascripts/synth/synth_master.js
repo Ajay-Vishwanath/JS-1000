@@ -22,7 +22,13 @@ class Synth {
         window.addEventListener('keyup', this.keyUp.bind(this), false);
         window.addEventListener('mousedown', this.mouseDown.bind(this), false);
         window.addEventListener('mouseup', this.mouseUp.bind(this), false);
-        
+
+        this.lfoVolume = document.getElementById('lfo-amp')
+        this.lfoVolume.addEventListener('change', this.setLfoVolume.bind(this), false);
+        this.lfoPitch = document.getElementById('lfo-pitch')
+        this.lfoPitch.addEventListener('change', this.setLfoPitch.bind(this), false);
+        this.lfoFilter = document.getElementById('lfo-filter')
+        this.lfoFilter.addEventListener('change', this.setLfoPitch.bind(this), false);
     }
 
     setOctave(){
