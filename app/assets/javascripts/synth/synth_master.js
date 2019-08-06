@@ -34,7 +34,7 @@ class Synth {
         // this.lfoFilter.addEventListener('click', this.setLfoFilter.bind(this), false);
 
         this.masterVolumeInput = document.getElementById('volume')
-        this.masterVolume.value = this.masterVolumeInput.value
+        this.masterVolume.gain.value = this.masterVolumeInput.value
         this.masterVolumeInput.addEventListener('change', this.setMasterVolume.bind(this), false)
     }
 
@@ -50,14 +50,15 @@ class Synth {
     }
 
     setMasterVolume(){
-        debugger 
         this.masterVolume.gain.setValueAtTime(parseFloat(event.target.value), this.ctx.currentTime)
+        debugger 
     }
 
     setUp(){
         // this.connect(this.oscillator.osc, this.filter.filter)
         this.connect(this.filter.filter, this.masterVolume)
         this.connect(this.masterVolume, this.ctx.destination)
+        debugger 
     }
 
     connect(a, b) {
@@ -65,12 +66,7 @@ class Synth {
     }
 
     setLfoVolume(){
-        const lfo = this.lfo
-        const activeNotes = this.activeNotes
-        Object.keys(this.activeNotes).forEach(function (activeNote, i) {
-            debugger 
-            lfo.setParams(activeNotes[activeNote].gain, "amp")
-        })
+        this.lfo.setParams(this.masterVolume.gain, "amp")
     }
 
     // keyboard control 

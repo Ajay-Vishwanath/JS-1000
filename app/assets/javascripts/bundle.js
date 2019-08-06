@@ -241,16 +241,18 @@ function () {
     key: "setLFOFrequency",
     value: function setLFOFrequency() {
       this.osc.frequency.value = parseFloat(event.target.value);
+      debugger;
     }
   }, {
     key: "setParams",
     value: function setParams(param, source) {
       if (source === this.source) {
         this.source = null;
-        param.disconnect();
+        this.depth.disconnect();
       } else if (source === "amp") {
         this.source = "amp";
         this.depth.connect(param);
+        debugger;
       } else if (source === "filter") {
         this.source = "filter";
         this.depth.connect(param);
@@ -866,7 +868,7 @@ function () {
     // this.lfoFilter.addEventListener('click', this.setLfoFilter.bind(this), false);
 
     this.masterVolumeInput = document.getElementById('volume');
-    this.masterVolume.value = this.masterVolumeInput.value;
+    this.masterVolume.gain.value = this.masterVolumeInput.value;
     this.masterVolumeInput.addEventListener('change', this.setMasterVolume.bind(this), false);
   }
 
@@ -886,8 +888,8 @@ function () {
   }, {
     key: "setMasterVolume",
     value: function setMasterVolume() {
-      debugger;
       this.masterVolume.gain.setValueAtTime(parseFloat(event.target.value), this.ctx.currentTime);
+      debugger;
     }
   }, {
     key: "setUp",
@@ -895,6 +897,7 @@ function () {
       // this.connect(this.oscillator.osc, this.filter.filter)
       this.connect(this.filter.filter, this.masterVolume);
       this.connect(this.masterVolume, this.ctx.destination);
+      debugger;
     }
   }, {
     key: "connect",
@@ -904,12 +907,7 @@ function () {
   }, {
     key: "setLfoVolume",
     value: function setLfoVolume() {
-      var lfo = this.lfo;
-      var activeNotes = this.activeNotes;
-      Object.keys(this.activeNotes).forEach(function (activeNote, i) {
-        debugger;
-        lfo.setParams(activeNotes[activeNote].gain, "amp");
-      });
+      this.lfo.setParams(this.masterVolume.gain, "amp");
     } // keyboard control 
 
   }, {

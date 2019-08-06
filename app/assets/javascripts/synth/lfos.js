@@ -23,16 +23,18 @@ class LFO {
 
     setLFOFrequency() {
         this.osc.frequency.value = parseFloat(event.target.value)
+        debugger 
     }
 
     setParams(param, source){
         if (source === this.source) {
             this.source = null 
-            param.disconnect()
+            this.depth.disconnect()
         }
         else if (source === "amp"){
             this.source = "amp"
             this.depth.connect(param)
+            debugger 
 
         } else if (source === "filter"){
             this.source = "filter"
