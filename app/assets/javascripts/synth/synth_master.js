@@ -14,6 +14,7 @@ class Synth {
         this.oscillator = new Oscillator({context: this.ctx, envelope: this.envelope})
         this.filter = new Filter({context: this.ctx})
         this.lfo = new LFO({context: this.ctx})
+        this.masterVolume = this.ctx.createGain(); 
 
         this.octaveControl = document.getElementById('octave-control');
         this.octaveControl.addEventListener('input', this.setOctave.bind(this), false);
@@ -27,10 +28,14 @@ class Synth {
 
         this.lfoVolume = document.getElementById('lfo-amp')
         this.lfoVolume.addEventListener('click', this.setLfoVolume.bind(this), false);
-        this.lfoPitch = document.getElementById('lfo-pitch')
-        this.lfoPitch.addEventListener('click', this.setLfoPitch.bind(this), false);
-        this.lfoFilter = document.getElementById('lfo-filter')
-        this.lfoFilter.addEventListener('click', this.setLfoFilter.bind(this), false);
+        // this.lfoPitch = document.getElementById('lfo-pitch')
+        // this.lfoPitch.addEventListener('click', this.setLfoPitch.bind(this), false);
+        // this.lfoFilter = document.getElementById('lfo-filter')
+        // this.lfoFilter.addEventListener('click', this.setLfoFilter.bind(this), false);
+
+        this.masterVolumeInput = document.getElementById('volume')
+        this.masterVolume.value = this.masterVolumeInput.value
+        this.masterVolumeInput.addEventListener('change', this.setMasterVolume.bind(this), false)
     }
 
     setOctave(){
@@ -44,22 +49,28 @@ class Synth {
         }
     }
 
+    setMasterVolume(){
+        debugger 
+        this.masterVolume.gain.setValueAtTime(parseFloat(event.target.value), this.ctx.currentTime)
+    }
+
     setUp(){
         // this.connect(this.oscillator.osc, this.filter.filter)
-        this.connect(this.filter.filter, this.ctx.destination)
+        this.connect(this.filter.filter, this.masterVolume)
+        this.connect(this.masterVolume, this.ctx.destination)
     }
 
     connect(a, b) {
         a.connect(b)
     }
 
-    setLfoParams(source){
-        if (source === "amp"){
-            this.lfo.setParams()
-        }
-    }
-
     setLfoVolume(){
+        const lfo = this.lfo
+        const activeNotes = this.activeNotes
+        Object.keys(this.activeNotes).forEach(function (activeNote, i) {
+            debugger 
+            lfo.setParams(activeNotes[activeNote].gain, "amp")
+        })
     }
 
     // keyboard control 

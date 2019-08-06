@@ -219,7 +219,7 @@ function () {
   function LFO(options) {
     _classCallCheck(this, LFO);
 
-    this.context = options.context, this.osc = options.createOscillator();
+    this.context = options.context, this.osc = this.context.createOscillator();
     this.osc.type = "sine";
     this.depth = options.context.createGain();
     this.osc.connect(this.depth);
@@ -851,6 +851,7 @@ function () {
     this.lfo = new _lfos__WEBPACK_IMPORTED_MODULE_4__["default"]({
       context: this.ctx
     });
+    this.masterVolume = this.ctx.createGain();
     this.octaveControl = document.getElementById('octave-control');
     this.octaveControl.addEventListener('input', this.setOctave.bind(this), false);
     this.activeNotes = {};
@@ -859,11 +860,14 @@ function () {
     window.addEventListener('mousedown', this.mouseDown.bind(this), false);
     window.addEventListener('mouseup', this.mouseUp.bind(this), false);
     this.lfoVolume = document.getElementById('lfo-amp');
-    this.lfoVolume.addEventListener('click', this.setLfoVolume.bind(this), false);
-    this.lfoPitch = document.getElementById('lfo-pitch');
-    this.lfoPitch.addEventListener('click', this.setLfoPitch.bind(this), false);
-    this.lfoFilter = document.getElementById('lfo-filter');
-    this.lfoFilter.addEventListener('click', this.setLfoFilter.bind(this), false);
+    this.lfoVolume.addEventListener('click', this.setLfoVolume.bind(this), false); // this.lfoPitch = document.getElementById('lfo-pitch')
+    // this.lfoPitch.addEventListener('click', this.setLfoPitch.bind(this), false);
+    // this.lfoFilter = document.getElementById('lfo-filter')
+    // this.lfoFilter.addEventListener('click', this.setLfoFilter.bind(this), false);
+
+    this.masterVolumeInput = document.getElementById('volume');
+    this.masterVolume.value = this.masterVolumeInput.value;
+    this.masterVolumeInput.addEventListener('change', this.setMasterVolume.bind(this), false);
   }
 
   _createClass(Synth, [{
@@ -880,10 +884,17 @@ function () {
       }
     }
   }, {
+    key: "setMasterVolume",
+    value: function setMasterVolume() {
+      debugger;
+      this.masterVolume.gain.setValueAtTime(parseFloat(event.target.value), this.ctx.currentTime);
+    }
+  }, {
     key: "setUp",
     value: function setUp() {
       // this.connect(this.oscillator.osc, this.filter.filter)
-      this.connect(this.filter.filter, this.ctx.destination);
+      this.connect(this.filter.filter, this.masterVolume);
+      this.connect(this.masterVolume, this.ctx.destination);
     }
   }, {
     key: "connect",
@@ -891,15 +902,15 @@ function () {
       a.connect(b);
     }
   }, {
-    key: "setLfoParams",
-    value: function setLfoParams(source) {
-      if (source === "amp") {
-        this.lfo.setParams();
-      }
-    }
-  }, {
     key: "setLfoVolume",
-    value: function setLfoVolume() {} // keyboard control 
+    value: function setLfoVolume() {
+      var lfo = this.lfo;
+      var activeNotes = this.activeNotes;
+      Object.keys(this.activeNotes).forEach(function (activeNote, i) {
+        debugger;
+        lfo.setParams(activeNotes[activeNote].gain, "amp");
+      });
+    } // keyboard control 
 
   }, {
     key: "keyDown",

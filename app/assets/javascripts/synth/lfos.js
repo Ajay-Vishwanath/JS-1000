@@ -1,7 +1,7 @@
 class LFO {
     constructor(options){
         this.context = options.context,
-        this.osc = options.createOscillator();
+        this.osc = this.context.createOscillator();
         this.osc.type = "sine";
 
         this.depth = options.context.createGain();
