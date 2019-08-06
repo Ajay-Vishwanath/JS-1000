@@ -2,6 +2,7 @@ import NoteTable from './note_table';
 import Oscillator from './oscillators';
 import Filter from './filters'; 
 import Envelope from './envelopes';
+import LFO from './lfos';
 
 
 class Synth {
@@ -12,6 +13,7 @@ class Synth {
         this.envelope = new Envelope({ context: this.ctx })
         this.oscillator = new Oscillator({context: this.ctx, envelope: this.envelope})
         this.filter = new Filter({context: this.ctx})
+        this.lfo = new LFO({context: this.ctx})
 
         this.octaveControl = document.getElementById('octave-control');
         this.octaveControl.addEventListener('input', this.setOctave.bind(this), false);
@@ -24,11 +26,11 @@ class Synth {
         window.addEventListener('mouseup', this.mouseUp.bind(this), false);
 
         this.lfoVolume = document.getElementById('lfo-amp')
-        this.lfoVolume.addEventListener('change', this.setLfoVolume.bind(this), false);
+        this.lfoVolume.addEventListener('click', this.setLfoVolume.bind(this), false);
         this.lfoPitch = document.getElementById('lfo-pitch')
-        this.lfoPitch.addEventListener('change', this.setLfoPitch.bind(this), false);
+        this.lfoPitch.addEventListener('click', this.setLfoPitch.bind(this), false);
         this.lfoFilter = document.getElementById('lfo-filter')
-        this.lfoFilter.addEventListener('change', this.setLfoPitch.bind(this), false);
+        this.lfoFilter.addEventListener('click', this.setLfoFilter.bind(this), false);
     }
 
     setOctave(){
@@ -49,6 +51,15 @@ class Synth {
 
     connect(a, b) {
         a.connect(b)
+    }
+
+    setLfoParams(source){
+        if (source === "amp"){
+            this.lfo.setParams()
+        }
+    }
+
+    setLfoVolume(){
     }
 
     // keyboard control 

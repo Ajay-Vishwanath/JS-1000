@@ -31,7 +31,6 @@ class LFO {
             param.disconnect()
         }
         else if (source === "amp"){
-
             this.source = "amp"
             this.depth.connect(param)
 

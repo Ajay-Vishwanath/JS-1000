@@ -198,6 +198,76 @@ function () {
 
 /***/ }),
 
+/***/ "./app/assets/javascripts/synth/lfos.js":
+/*!**********************************************!*\
+  !*** ./app/assets/javascripts/synth/lfos.js ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var LFO =
+/*#__PURE__*/
+function () {
+  function LFO(options) {
+    _classCallCheck(this, LFO);
+
+    this.context = options.context, this.osc = options.createOscillator();
+    this.osc.type = "sine";
+    this.depth = options.context.createGain();
+    this.osc.connect(this.depth);
+    this.lfoDepthControl = document.getElementById('lfo-depth');
+    this.depth.value = this.lfoDepthControl.value;
+    this.lfoDepthControl.addEventListener('change', this.setLFODepth.bind(this), false);
+    this.lfoFrequencyControl = document.getElementById('lfo-frequency');
+    this.osc.frequency.value = this.lfoDepthControl.value;
+    this.lfoFrequencyControl.addEventListener('change', this.setLFOFrequency.bind(this), false);
+    this.source = null;
+  }
+
+  _createClass(LFO, [{
+    key: "setLFODepth",
+    value: function setLFODepth() {
+      this.depth.value = parseFloat(event.target.value);
+    }
+  }, {
+    key: "setLFOFrequency",
+    value: function setLFOFrequency() {
+      this.osc.frequency.value = parseFloat(event.target.value);
+    }
+  }, {
+    key: "setParams",
+    value: function setParams(param, source) {
+      if (source === this.source) {
+        this.source = null;
+        param.disconnect();
+      } else if (source === "amp") {
+        this.source = "amp";
+        this.depth.connect(param);
+      } else if (source === "filter") {
+        this.source = "filter";
+        this.depth.connect(param);
+      } else if (source === "frequency") {
+        this.source = "frequency";
+        this.depth.connect(param);
+      }
+    }
+  }]);
+
+  return LFO;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (LFO);
+
+/***/ }),
+
 /***/ "./app/assets/javascripts/synth/note_table.js":
 /*!****************************************************!*\
   !*** ./app/assets/javascripts/synth/note_table.js ***!
@@ -747,11 +817,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _oscillators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./oscillators */ "./app/assets/javascripts/synth/oscillators.js");
 /* harmony import */ var _filters__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./filters */ "./app/assets/javascripts/synth/filters.js");
 /* harmony import */ var _envelopes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./envelopes */ "./app/assets/javascripts/synth/envelopes.js");
+/* harmony import */ var _lfos__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./lfos */ "./app/assets/javascripts/synth/lfos.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 
 
 
@@ -776,6 +848,9 @@ function () {
     this.filter = new _filters__WEBPACK_IMPORTED_MODULE_2__["default"]({
       context: this.ctx
     });
+    this.lfo = new _lfos__WEBPACK_IMPORTED_MODULE_4__["default"]({
+      context: this.ctx
+    });
     this.octaveControl = document.getElementById('octave-control');
     this.octaveControl.addEventListener('input', this.setOctave.bind(this), false);
     this.activeNotes = {};
@@ -783,6 +858,12 @@ function () {
     window.addEventListener('keyup', this.keyUp.bind(this), false);
     window.addEventListener('mousedown', this.mouseDown.bind(this), false);
     window.addEventListener('mouseup', this.mouseUp.bind(this), false);
+    this.lfoVolume = document.getElementById('lfo-amp');
+    this.lfoVolume.addEventListener('click', this.setLfoVolume.bind(this), false);
+    this.lfoPitch = document.getElementById('lfo-pitch');
+    this.lfoPitch.addEventListener('click', this.setLfoPitch.bind(this), false);
+    this.lfoFilter = document.getElementById('lfo-filter');
+    this.lfoFilter.addEventListener('click', this.setLfoFilter.bind(this), false);
   }
 
   _createClass(Synth, [{
@@ -808,7 +889,17 @@ function () {
     key: "connect",
     value: function connect(a, b) {
       a.connect(b);
-    } // keyboard control 
+    }
+  }, {
+    key: "setLfoParams",
+    value: function setLfoParams(source) {
+      if (source === "amp") {
+        this.lfo.setParams();
+      }
+    }
+  }, {
+    key: "setLfoVolume",
+    value: function setLfoVolume() {} // keyboard control 
 
   }, {
     key: "keyDown",
