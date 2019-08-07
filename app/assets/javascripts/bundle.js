@@ -219,29 +219,30 @@ function () {
   function LFO(options) {
     _classCallCheck(this, LFO);
 
-    this.context = options.context, this.osc = this.context.createOscillator();
+    this.context = options.context, this.osc = options.context.createOscillator();
     this.osc.type = "sine";
     this.depth = options.context.createGain();
-    this.osc.connect(this.depth);
     this.lfoDepthControl = document.getElementById('lfo-depth');
-    this.depth.value = this.lfoDepthControl.value;
+    this.maxAmount = 0;
+    this.depth.gain.value = parseFloat(this.lfoDepthControl.value * this.maxAmount);
     this.lfoDepthControl.addEventListener('change', this.setLFODepth.bind(this), false);
+    this.osc.connect(this.depth);
     this.lfoFrequencyControl = document.getElementById('lfo-frequency');
-    this.osc.frequency.value = this.lfoDepthControl.value;
+    this.osc.frequency.value = parseFloat(this.lfoFrequencyControl.value);
     this.lfoFrequencyControl.addEventListener('change', this.setLFOFrequency.bind(this), false);
     this.source = null;
+    this.osc.start();
   }
 
   _createClass(LFO, [{
     key: "setLFODepth",
     value: function setLFODepth() {
-      this.depth.value = parseFloat(event.target.value);
+      this.depth.gain.value = this.maxAmount * parseFloat(event.target.value);
     }
   }, {
     key: "setLFOFrequency",
     value: function setLFOFrequency() {
       this.osc.frequency.value = parseFloat(event.target.value);
-      debugger;
     }
   }, {
     key: "setParams",
@@ -249,16 +250,28 @@ function () {
       if (source === this.source) {
         this.source = null;
         this.depth.disconnect();
+        this.maxAmount = 0;
       } else if (source === "amp") {
         this.source = "amp";
+        this.depth.disconnect();
         this.depth.connect(param);
-        debugger;
+        this.maxAmount = 1;
+        this.depth.gain.value = parseFloat(this.lfoDepthControl.value * this.maxAmount);
+        this.osc.frequency.value = parseFloat(this.lfoFrequencyControl.value);
       } else if (source === "filter") {
         this.source = "filter";
+        this.depth.disconnect();
         this.depth.connect(param);
+        this.maxAmount = 10000;
+        this.depth.gain.value = parseFloat(this.lfoDepthControl.value * this.maxAmount);
+        this.osc.frequency.value = parseFloat(this.lfoFrequencyControl.value);
       } else if (source === "frequency") {
         this.source = "frequency";
-        this.depth.connect(param);
+        this.depth.disconnect();
+        this.maxAmount = 25;
+        this.depth.gain.value = parseFloat(this.lfoDepthControl.value * this.maxAmount);
+        this.osc.frequency.value = parseFloat(this.lfoFrequencyControl.value);
+        debugger;
       }
     }
   }]);
@@ -861,10 +874,11 @@ function () {
     window.addEventListener('keyup', this.keyUp.bind(this), false);
     window.addEventListener('mousedown', this.mouseDown.bind(this), false);
     window.addEventListener('mouseup', this.mouseUp.bind(this), false);
+    this.lfoMode = "";
     this.lfoVolume = document.getElementById('lfo-amp');
-    this.lfoVolume.addEventListener('click', this.setLfoVolume.bind(this), false); // this.lfoPitch = document.getElementById('lfo-pitch')
-    // this.lfoPitch.addEventListener('click', this.setLfoPitch.bind(this), false);
-    // this.lfoFilter = document.getElementById('lfo-filter')
+    this.lfoVolume.addEventListener('click', this.setLfoVolume.bind(this), false);
+    this.lfoPitch = document.getElementById('lfo-pitch');
+    this.lfoPitch.addEventListener('click', this.setLfoPitch.bind(this), false); // this.lfoFilter = document.getElementById('lfo-filter')
     // this.lfoFilter.addEventListener('click', this.setLfoFilter.bind(this), false);
 
     this.masterVolumeInput = document.getElementById('volume');
@@ -889,7 +903,6 @@ function () {
     key: "setMasterVolume",
     value: function setMasterVolume() {
       this.masterVolume.gain.setValueAtTime(parseFloat(event.target.value), this.ctx.currentTime);
-      debugger;
     }
   }, {
     key: "setUp",
@@ -897,7 +910,6 @@ function () {
       // this.connect(this.oscillator.osc, this.filter.filter)
       this.connect(this.filter.filter, this.masterVolume);
       this.connect(this.masterVolume, this.ctx.destination);
-      debugger;
     }
   }, {
     key: "connect",
@@ -908,6 +920,21 @@ function () {
     key: "setLfoVolume",
     value: function setLfoVolume() {
       this.lfo.setParams(this.masterVolume.gain, "amp");
+
+      if (this.lfoMode !== "volume") {
+        this.lfoMode = "volume";
+      } else {
+        this.lfoMode = "";
+      }
+    }
+  }, {
+    key: "setLfoPitch",
+    value: function setLfoPitch() {
+      if (this.lfoMode !== "pitch") {
+        this.lfoMode = "pitch";
+      } else {
+        this.lfoMode = "";
+      }
     } // keyboard control 
 
   }, {
@@ -987,6 +1014,17 @@ function () {
         envelope: this.envelope
       });
       osc.osc.frequency.setValueAtTime(this.notetable.octave[key], this.ctx.currentTime);
+
+      if (this.lfoMode === "pitch") {
+        var pitchLfo = new _lfos__WEBPACK_IMPORTED_MODULE_4__["default"]({
+          context: this.ctx
+        });
+        this.lfo.source = "frequency";
+        this.lfo.depth.disconnect();
+        pitchLfo.setParams(null, "frequency");
+        pitchLfo.depth.connect(osc.osc.frequency);
+      }
+
       this.activeNotes[key] = osc;
       this.activeNotes[key].playNote();
       this.connect(this.activeNotes[key].osc, osc.gain);

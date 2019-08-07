@@ -26,10 +26,11 @@ class Synth {
         window.addEventListener('mousedown', this.mouseDown.bind(this), false);
         window.addEventListener('mouseup', this.mouseUp.bind(this), false);
 
+        this.lfoMode = "";
         this.lfoVolume = document.getElementById('lfo-amp')
         this.lfoVolume.addEventListener('click', this.setLfoVolume.bind(this), false);
-        // this.lfoPitch = document.getElementById('lfo-pitch')
-        // this.lfoPitch.addEventListener('click', this.setLfoPitch.bind(this), false);
+        this.lfoPitch = document.getElementById('lfo-pitch')
+        this.lfoPitch.addEventListener('click', this.setLfoPitch.bind(this), false);
         // this.lfoFilter = document.getElementById('lfo-filter')
         // this.lfoFilter.addEventListener('click', this.setLfoFilter.bind(this), false);
 
@@ -51,14 +52,12 @@ class Synth {
 
     setMasterVolume(){
         this.masterVolume.gain.setValueAtTime(parseFloat(event.target.value), this.ctx.currentTime)
-        debugger 
     }
 
     setUp(){
         // this.connect(this.oscillator.osc, this.filter.filter)
         this.connect(this.filter.filter, this.masterVolume)
         this.connect(this.masterVolume, this.ctx.destination)
-        debugger 
     }
 
     connect(a, b) {
@@ -67,6 +66,20 @@ class Synth {
 
     setLfoVolume(){
         this.lfo.setParams(this.masterVolume.gain, "amp")
+
+        if (this.lfoMode !== "volume") {
+            this.lfoMode = "volume"
+        } else {
+            this.lfoMode = ""
+        }
+    }
+
+    setLfoPitch(){
+        if (this.lfoMode !== "pitch"){
+            this.lfoMode = "pitch"
+        } else {
+            this.lfoMode = ""
+        }
     }
 
     // keyboard control 
@@ -136,6 +149,13 @@ class Synth {
     playNote(key) {
         const osc = new Oscillator({ context: this.ctx, envelope: this.envelope})
         osc.osc.frequency.setValueAtTime(this.notetable.octave[key], this.ctx.currentTime)
+        if (this.lfoMode === "pitch") {
+            const pitchLfo = new LFO({ context: this.ctx })
+            this.lfo.source = "frequency"
+            this.lfo.depth.disconnect();
+            pitchLfo.setParams(null, "frequency")
+            pitchLfo.depth.connect(osc.osc.frequency)
+        } 
         this.activeNotes[key] = osc
         this.activeNotes[key].playNote();
         this.connect(this.activeNotes[key].osc, osc.gain)
