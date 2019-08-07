@@ -31,8 +31,8 @@ class Synth {
         this.lfoVolume.addEventListener('click', this.setLfoVolume.bind(this), false);
         this.lfoPitch = document.getElementById('lfo-pitch')
         this.lfoPitch.addEventListener('click', this.setLfoPitch.bind(this), false);
-        // this.lfoFilter = document.getElementById('lfo-filter')
-        // this.lfoFilter.addEventListener('click', this.setLfoFilter.bind(this), false);
+        this.lfoFilter = document.getElementById('lfo-filter')
+        this.lfoFilter.addEventListener('click', this.setLfoFilter.bind(this), false);
 
         this.masterVolumeInput = document.getElementById('volume')
         this.masterVolume.gain.value = this.masterVolumeInput.value
@@ -77,6 +77,16 @@ class Synth {
     setLfoPitch(){
         if (this.lfoMode !== "pitch"){
             this.lfoMode = "pitch"
+        } else {
+            this.lfoMode = ""
+        }
+    }
+
+    setLfoFilter(){
+        this.lfo.setParams(this.filter.filter.frequency, "filter")
+
+        if (this.lfoMode !== "filter"){
+            this.lfoMode = "filter"
         } else {
             this.lfoMode = ""
         }

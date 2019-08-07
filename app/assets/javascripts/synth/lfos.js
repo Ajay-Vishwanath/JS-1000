@@ -49,12 +49,9 @@ class LFO {
             this.depth.gain.value = parseFloat(this.lfoDepthControl.value * this.maxAmount)
             this.osc.frequency.value = parseFloat(this.lfoFrequencyControl.value)
         } else if (source === "frequency"){
-            this.source = "frequency"
-            this.depth.disconnect();
             this.maxAmount = 25;
             this.depth.gain.value = parseFloat(this.lfoDepthControl.value * this.maxAmount)
             this.osc.frequency.value = parseFloat(this.lfoFrequencyControl.value)
-            debugger 
         }
     }
 }
