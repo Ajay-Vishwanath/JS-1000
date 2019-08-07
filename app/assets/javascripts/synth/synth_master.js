@@ -3,6 +3,7 @@ import Oscillator from './oscillators';
 import Filter from './filters'; 
 import Envelope from './envelopes';
 import LFO from './lfos';
+import Reverb from './reverb';
 
 
 class Synth {

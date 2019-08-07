@@ -45,7 +45,7 @@ class LFO {
             this.source = "filter"
             this.depth.disconnect();
             this.depth.connect(param)
-            this.maxAmount = 10000
+            this.maxAmount = 8000
             this.depth.gain.value = parseFloat(this.lfoDepthControl.value * this.maxAmount)
             this.osc.frequency.value = parseFloat(this.lfoFrequencyControl.value)
         } else if (source === "frequency"){
