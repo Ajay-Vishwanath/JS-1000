@@ -81,8 +81,15 @@
             </div>
 
             <div class="effects">
-                <div class="reverb">
+                <div class="effects-buttons">
                     <button id="reverb-button">Reverb</button>
+                    <button id="delay-button">Delay</button>
+                </div>
+                <div class="effects-inputs">
+                    <span>Delay Time:</span>
+                    <input type="range" id="delay-time" min="0" max="1" value=".5" step="0.05">
+                    <span>Delay Feedback</span>
+                    <input type="range" id="feedback" min="0" max=".95" value=".5" step="0.05">
                 </div>
             </div>
         </div>

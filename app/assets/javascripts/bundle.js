@@ -86,6 +86,29 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./app/assets/javascripts/synth/delay.js":
+/*!***********************************************!*\
+  !*** ./app/assets/javascripts/synth/delay.js ***!
+  \***********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Delay = function Delay(options) {
+  _classCallCheck(this, Delay);
+
+  this.context = options.context;
+  this.delay = this.context.createDelay();
+  this.delay.delayTime.value = 0.5;
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Delay);
+
+/***/ }),
+
 /***/ "./app/assets/javascripts/synth/envelopes.js":
 /*!***************************************************!*\
   !*** ./app/assets/javascripts/synth/envelopes.js ***!
@@ -900,7 +923,6 @@ function () {
       request.onload = function () {
         context.decodeAudioData(request.response, function (buffer) {
           object.buffer = buffer;
-          debugger;
         });
       };
 
@@ -930,11 +952,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _envelopes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./envelopes */ "./app/assets/javascripts/synth/envelopes.js");
 /* harmony import */ var _lfos__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./lfos */ "./app/assets/javascripts/synth/lfos.js");
 /* harmony import */ var _reverb__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./reverb */ "./app/assets/javascripts/synth/reverb.js");
+/* harmony import */ var _delay__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./delay */ "./app/assets/javascripts/synth/delay.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 
 
 
@@ -968,6 +992,10 @@ function () {
       context: this.ctx
     });
     this.reverbStatus = "off";
+    this.delay = new _delay__WEBPACK_IMPORTED_MODULE_6__["default"]({
+      context: this.ctx
+    });
+    this.delayStatus = "off";
     this.masterVolume = this.ctx.createGain();
     this.octaveControl = document.getElementById('octave-control');
     this.octaveControl.addEventListener('input', this.setOctave.bind(this), false);
@@ -985,6 +1013,8 @@ function () {
     this.lfoFilter.addEventListener('click', this.setLfoFilter.bind(this), false);
     this.reverbSwitch = document.getElementById('reverb-button');
     this.reverbSwitch.addEventListener('click', this.setReverb.bind(this), false);
+    this.delaySwitch = document.getElementById('delay-button');
+    this.delaySwitch.addEventListener('click', this.setDelay.bind(this), false);
     this.masterVolumeInput = document.getElementById('volume');
     this.masterVolume.gain.value = this.masterVolumeInput.value;
     this.masterVolumeInput.addEventListener('change', this.setMasterVolume.bind(this), false);
@@ -1057,13 +1087,55 @@ function () {
       if (this.reverbStatus === "off") {
         this.filter.filter.disconnect();
         this.filter.filter.connect(this.reverb.reverb);
-        this.reverb.reverb.connect(this.masterVolume);
+
+        if (this.delayStatus === "on") {
+          this.reverb.reverb.connect(this.delay.delay);
+        } else {
+          this.reverb.reverb.connect(this.masterVolume);
+        }
+
         this.reverbStatus = "on";
       } else {
         this.filter.filter.disconnect();
         this.reverb.reverb.disconnect();
-        this.filter.filter.connect(this.masterVolume);
+
+        if (this.delayStatus === "on") {
+          this.filter.filter.connect(this.delay.delay);
+        } else {
+          this.filter.filter.connect(this.masterVolume);
+        }
+
         this.reverbStatus = "off";
+      }
+    }
+  }, {
+    key: "setDelay",
+    value: function setDelay() {
+      if (this.delayStatus === "off") {
+        if (this.reverbStatus === "on") {
+          this.reverb.reverb.disconnect();
+          this.reverb.reverb.connect(this.delay.delay);
+          this.reverb.reverb.connect(this.masterVolume);
+        } else {
+          this.filter.filter.disconnect();
+          this.filter.filter.connect(this.delay.delay);
+          this.filter.filter.connect(this.masterVolume);
+        }
+
+        this.delay.delay.connect(this.masterVolume);
+        this.delayStatus = "on";
+      } else {
+        this.delay.delay.disconnect();
+
+        if (this.reverbStatus === "on") {
+          this.reverb.reverb.disconnect();
+          this.reverb.reverb.connect(this.masterVolume);
+        } else {
+          this.filter.filter.disconnect();
+          this.filter.filter.connect(this.masterVolume);
+        }
+
+        this.delayStatus = "off";
       }
     } // keyboard control 
 

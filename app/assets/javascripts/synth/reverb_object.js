@@ -16,7 +16,6 @@ class ReverbObject {
         request.onload = function () {
             context.decodeAudioData(request.response, function (buffer) {
                 object.buffer = buffer;
-                debugger 
             });
         }
         request.send();

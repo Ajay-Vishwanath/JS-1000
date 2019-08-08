@@ -4,6 +4,7 @@ import Filter from './filters';
 import Envelope from './envelopes';
 import LFO from './lfos';
 import Reverb from './reverb';
+import Delay from './delay';
 
 
 class Synth {
@@ -17,6 +18,8 @@ class Synth {
         this.lfo = new LFO({context: this.ctx})
         this.reverb = new Reverb({context: this.ctx})
         this.reverbStatus = "off"
+        this.delay = new Delay({context: this.ctx})
+        this.delayStatus = "off"
         this.masterVolume = this.ctx.createGain(); 
 
         this.octaveControl = document.getElementById('octave-control');
@@ -39,6 +42,9 @@ class Synth {
 
         this.reverbSwitch = document.getElementById('reverb-button')
         this.reverbSwitch.addEventListener('click', this.setReverb.bind(this), false);
+
+        this.delaySwitch = document.getElementById('delay-button')
+        this.delaySwitch.addEventListener('click', this.setDelay.bind(this), false);
 
         this.masterVolumeInput = document.getElementById('volume')
         this.masterVolume.gain.value = this.masterVolumeInput.value
@@ -102,13 +108,47 @@ class Synth {
         if (this.reverbStatus === "off"){
             this.filter.filter.disconnect()
             this.filter.filter.connect(this.reverb.reverb)
-            this.reverb.reverb.connect(this.masterVolume)
+            if (this.delayStatus === "on"){
+                this.reverb.reverb.connect(this.delay.delay)
+            } else {
+                this.reverb.reverb.connect(this.masterVolume)
+            } 
             this.reverbStatus = "on"
         } else {
             this.filter.filter.disconnect()
             this.reverb.reverb.disconnect()
-            this.filter.filter.connect(this.masterVolume)
+            if (this.delayStatus === "on") {
+                this.filter.filter.connect(this.delay.delay)
+            } else {
+                this.filter.filter.connect(this.masterVolume)
+            }
             this.reverbStatus = "off"
+        }
+    }
+
+    setDelay(){
+        if (this.delayStatus === "off"){
+            if (this.reverbStatus === "on") {
+                this.reverb.reverb.disconnect()
+                this.reverb.reverb.connect(this.delay.delay)
+                this.reverb.reverb.connect(this.masterVolume)
+            } else {
+                this.filter.filter.disconnect()
+                this.filter.filter.connect(this.delay.delay)
+                this.filter.filter.connect(this.masterVolume)
+            }
+            this.delay.delay.connect(this.masterVolume)
+            this.delayStatus = "on"
+        } else {
+            this.delay.delay.disconnect()
+            if (this.reverbStatus === "on"){
+                this.reverb.reverb.disconnect()
+                this.reverb.reverb.connect(this.masterVolume)
+            } else {
+                this.filter.filter.disconnect()
+                this.filter.filter.connect(this.masterVolume)
+            }
+            this.delayStatus = "off"
         }
     }
 
