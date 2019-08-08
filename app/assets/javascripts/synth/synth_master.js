@@ -15,6 +15,8 @@ class Synth {
         this.oscillator = new Oscillator({context: this.ctx, envelope: this.envelope})
         this.filter = new Filter({context: this.ctx})
         this.lfo = new LFO({context: this.ctx})
+        this.reverb = new Reverb({context: this.ctx})
+        this.reverbStatus = "off"
         this.masterVolume = this.ctx.createGain(); 
 
         this.octaveControl = document.getElementById('octave-control');
@@ -34,6 +36,9 @@ class Synth {
         this.lfoPitch.addEventListener('click', this.setLfoPitch.bind(this), false);
         this.lfoFilter = document.getElementById('lfo-filter')
         this.lfoFilter.addEventListener('click', this.setLfoFilter.bind(this), false);
+
+        this.reverbSwitch = document.getElementById('reverb-button')
+        this.reverbSwitch.addEventListener('click', this.setReverb.bind(this), false);
 
         this.masterVolumeInput = document.getElementById('volume')
         this.masterVolume.gain.value = this.masterVolumeInput.value
@@ -90,6 +95,20 @@ class Synth {
             this.lfoMode = "filter"
         } else {
             this.lfoMode = ""
+        }
+    }
+
+    setReverb(){
+        if (this.reverbStatus === "off"){
+            this.filter.filter.disconnect()
+            this.filter.filter.connect(this.reverb.reverb)
+            this.reverb.reverb.connect(this.masterVolume)
+            this.reverbStatus = "on"
+        } else {
+            this.filter.filter.disconnect()
+            this.reverb.reverb.disconnect()
+            this.filter.filter.connect(this.masterVolume)
+            this.reverbStatus = "off"
         }
     }
 

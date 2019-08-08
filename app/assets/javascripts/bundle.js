@@ -825,17 +825,93 @@ function () {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _reverb_object__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./reverb_object */ "./app/assets/javascripts/synth/reverb_object.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Reverb = function Reverb(options) {
-  _classCallCheck(this, Reverb);
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-  this.context = options.context;
-  this.reverb = this.context.createConvolver(); // this.gain = this.context.createGain();
-  // this.reverb.connect(this.gain)
-};
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+var Reverb =
+/*#__PURE__*/
+function () {
+  function Reverb(options) {
+    _classCallCheck(this, Reverb);
+
+    this.context = options.context;
+    this.reverb = this.context.createConvolver();
+    this.irHall = new _reverb_object__WEBPACK_IMPORTED_MODULE_0__["default"]({
+      url: 'https://soundcloud-2-dev.s3-us-west-1.amazonaws.com/JS-1000/irHall.ogg',
+      context: this.context
+    });
+    setTimeout(this.setBuffer.bind(this), 1000);
+  }
+
+  _createClass(Reverb, [{
+    key: "setBuffer",
+    value: function setBuffer() {
+      this.reverb.buffer = this.irHall.buffer;
+    }
+  }]);
+
+  return Reverb;
+}();
 
 /* harmony default export */ __webpack_exports__["default"] = (Reverb);
+
+/***/ }),
+
+/***/ "./app/assets/javascripts/synth/reverb_object.js":
+/*!*******************************************************!*\
+  !*** ./app/assets/javascripts/synth/reverb_object.js ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var ReverbObject =
+/*#__PURE__*/
+function () {
+  function ReverbObject(options) {
+    _classCallCheck(this, ReverbObject);
+
+    this.context = options.context;
+    this.source = options.url;
+    this.loadAudio(this, options.url);
+  }
+
+  _createClass(ReverbObject, [{
+    key: "loadAudio",
+    value: function loadAudio(object, url) {
+      var context = this.context;
+      var request = new XMLHttpRequest();
+      request.open('GET', url, true);
+      request.responseType = 'arraybuffer';
+
+      request.onload = function () {
+        context.decodeAudioData(request.response, function (buffer) {
+          object.buffer = buffer;
+          debugger;
+        });
+      };
+
+      request.send();
+    }
+  }]);
+
+  return ReverbObject;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (ReverbObject);
 
 /***/ }),
 
@@ -888,6 +964,10 @@ function () {
     this.lfo = new _lfos__WEBPACK_IMPORTED_MODULE_4__["default"]({
       context: this.ctx
     });
+    this.reverb = new _reverb__WEBPACK_IMPORTED_MODULE_5__["default"]({
+      context: this.ctx
+    });
+    this.reverbStatus = "off";
     this.masterVolume = this.ctx.createGain();
     this.octaveControl = document.getElementById('octave-control');
     this.octaveControl.addEventListener('input', this.setOctave.bind(this), false);
@@ -903,6 +983,8 @@ function () {
     this.lfoPitch.addEventListener('click', this.setLfoPitch.bind(this), false);
     this.lfoFilter = document.getElementById('lfo-filter');
     this.lfoFilter.addEventListener('click', this.setLfoFilter.bind(this), false);
+    this.reverbSwitch = document.getElementById('reverb-button');
+    this.reverbSwitch.addEventListener('click', this.setReverb.bind(this), false);
     this.masterVolumeInput = document.getElementById('volume');
     this.masterVolume.gain.value = this.masterVolumeInput.value;
     this.masterVolumeInput.addEventListener('change', this.setMasterVolume.bind(this), false);
@@ -967,6 +1049,21 @@ function () {
         this.lfoMode = "filter";
       } else {
         this.lfoMode = "";
+      }
+    }
+  }, {
+    key: "setReverb",
+    value: function setReverb() {
+      if (this.reverbStatus === "off") {
+        this.filter.filter.disconnect();
+        this.filter.filter.connect(this.reverb.reverb);
+        this.reverb.reverb.connect(this.masterVolume);
+        this.reverbStatus = "on";
+      } else {
+        this.filter.filter.disconnect();
+        this.reverb.reverb.disconnect();
+        this.filter.filter.connect(this.masterVolume);
+        this.reverbStatus = "off";
       }
     } // keyboard control 
 
