@@ -110,6 +110,7 @@ class Synth {
             this.filter.filter.connect(this.reverb.reverb)
             if (this.delayStatus === "on"){
                 this.reverb.reverb.connect(this.delay.delay)
+                this.reverb.reverb.connect(this.masterVolume)
             } else {
                 this.reverb.reverb.connect(this.masterVolume)
             } 
@@ -119,6 +120,7 @@ class Synth {
             this.reverb.reverb.disconnect()
             if (this.delayStatus === "on") {
                 this.filter.filter.connect(this.delay.delay)
+                this.filter.filter.connect(this.masterVolume)
             } else {
                 this.filter.filter.connect(this.masterVolume)
             }
@@ -140,7 +142,7 @@ class Synth {
             this.delay.delay.connect(this.masterVolume)
             this.delayStatus = "on"
         } else {
-            this.delay.delay.disconnect()
+            this.delay.delay.disconnect(this.masterVolume)
             if (this.reverbStatus === "on"){
                 this.reverb.reverb.disconnect()
                 this.reverb.reverb.connect(this.masterVolume)

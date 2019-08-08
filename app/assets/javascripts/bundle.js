@@ -97,13 +97,43 @@
 __webpack_require__.r(__webpack_exports__);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Delay = function Delay(options) {
-  _classCallCheck(this, Delay);
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-  this.context = options.context;
-  this.delay = this.context.createDelay();
-  this.delay.delayTime.value = 0.5;
-};
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Delay =
+/*#__PURE__*/
+function () {
+  function Delay(options) {
+    _classCallCheck(this, Delay);
+
+    this.context = options.context;
+    this.delay = this.context.createDelay();
+    this.feedback = this.context.createGain();
+    this.delayTimeControl = document.getElementById('delay-time');
+    this.delay.delayTime.value = this.delayTimeControl.value;
+    this.delayTimeControl.addEventListener('change', this.setDelayTime.bind(this), false);
+    this.feedbackControl = document.getElementById('feedback');
+    this.feedback.gain.value = this.feedbackControl.value;
+    this.feedbackControl.addEventListener('change', this.setFeedbackValue.bind(this), false);
+    this.delay.connect(this.feedback);
+    this.feedback.connect(this.delay);
+  }
+
+  _createClass(Delay, [{
+    key: "setDelayTime",
+    value: function setDelayTime() {
+      this.delay.delayTime.value = event.target.value;
+    }
+  }, {
+    key: "setFeedbackValue",
+    value: function setFeedbackValue() {
+      this.feedback.gain.value = event.target.value;
+    }
+  }]);
+
+  return Delay;
+}();
 
 /* harmony default export */ __webpack_exports__["default"] = (Delay);
 
@@ -1090,6 +1120,7 @@ function () {
 
         if (this.delayStatus === "on") {
           this.reverb.reverb.connect(this.delay.delay);
+          this.reverb.reverb.connect(this.masterVolume);
         } else {
           this.reverb.reverb.connect(this.masterVolume);
         }
@@ -1101,6 +1132,7 @@ function () {
 
         if (this.delayStatus === "on") {
           this.filter.filter.connect(this.delay.delay);
+          this.filter.filter.connect(this.masterVolume);
         } else {
           this.filter.filter.connect(this.masterVolume);
         }
@@ -1125,7 +1157,7 @@ function () {
         this.delay.delay.connect(this.masterVolume);
         this.delayStatus = "on";
       } else {
-        this.delay.delay.disconnect();
+        this.delay.delay.disconnect(this.masterVolume);
 
         if (this.reverbStatus === "on") {
           this.reverb.reverb.disconnect();
