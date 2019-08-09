@@ -6,148 +6,151 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>JS-1000</title>
     <link rel="stylesheet" href="app/assets/stylesheets/keyboard.css">
+        <link rel="stylesheet" href="app/assets/stylesheets/main.css">
+            <link rel="stylesheet" href="app/assets/stylesheets/control_panel.css">
 </head>
 <body>
-    <!-- control panel -->
-    <div class=control-panel-continer>
-        <div class=control-panel>
-            <!-- master panel  -->
-            <div class="master-controls">
-                <div class="master-volume">
-                    <span>Master Volume</span>
-                    <input type="range" min="0.0" max="1.0" step="0.1"
-                    value="0.5" id="volume">
+    <div class="synth-body"> 
+        <!-- control panel -->
+        <div class=control-panel-container>
+            <div class=control-panel>
+                <!-- master panel  -->
+                <div class="master-controls">
+                    <div id="master-volume">
+                        <span>Master Volume</span>
+                        <input type="range" min="0.0" max="1.0" step="0.1"
+                        value="0.5" id="volume">
+                    </div>
+                </div>
+                <!-- oscillators  -->
+                <div class="oscillators">
+                    <div class="oscillator-one">
+                    <span>Waveform</span>
+                        <select id="waveform">
+                            <option value="sine">Sine</option>
+                            <option value="square">Square</option>
+                            <option value="triangle">Triangle</option>
+                        </select>
+                        <span>Gain</span>
+                        <input type="range" min="0" max="1" step="0.1" value="0.5" id="gain">
+                    </div>
                 </div>
 
-                <div class="octave-control">
-                    <span>Octave Control<z/span>
-                    <input type="range" min="1" max="5" step="1" value="3" id="octave-control">
+                <!-- filters  -->
+                <div class="freq-filters">
+                    <div class='filter-one'>
+                        <span>Filter Type:</span>
+                        <select id="filterType">
+                            <option value="lowpass" selected="selected">Lowpass</option>
+                            <option value="bandpass">Bandpass</option>
+                            <option value="highpass">Highpass</option>
+                        </select>
+                        <span>Filter Frequency:</span>
+                        <input id="filterFrequency" type="range" min="20" max="10000.0"
+                        step="10" value="350.0">
+                        <span>Filter Resonance:</span>
+                        <input id="filterResonance" type="range" min="1.0" max="30.0" step=".05" value="1">
+                    </div>
                 </div>
-            </div>
-            <!-- oscillators  -->
-            <div class="oscillators">
-                <div class="oscillator-one">
-                <span>Waveform</span>
-                    <select id="waveform">
-                        <option value="sine">Sine</option>
-                        <option value="square">Square</option>
-                        <option value="triangle">Triangle</option>
-                    </select>
-                    <span>Gain</span>
-                    <input type="range" min="0" max="1" step="0.1" value="0.5" id="gain">
+                <div class="lfo-section">
+                    <span>LFO:</span>
+                    <div id="lfo-buttons">
+                        <button class="lfo-button" id="lfo-amp">Volume</button>
+                        <button class="lfo-button" id="lfo-pitch">Pitch</button>
+                        <button class="lfo-button" id="lfo-filter">Filter</button>
+                    </div>
+                    <div id="lfo-controls">
+                        <span>Depth:</span>
+                        <input type="range" min="0" max="1" step=".05" value="0" id="lfo-depth">
+                        <span>Frequency:</span>
+                        <input type="range" min="0" max="12" step=".05" value="0" id="lfo-frequency">
+                    </div>
                 </div>
-            </div>
+                <div class="asdr-envelope">
+                    <span>Amp Envelope:</span>
+                    <div id="asdr-controls">
+                        <span>Attack:</span>
+                        <input type="range" min="0" max="2" step=".1" 
+                        value="0" id="attack-envelope">
+                        <span>Release:</span>
+                        <input type="range" min="0" max ="2" step=".1"
+                        value="0" id="release-envelope">
+                    </div>
+                </div>
 
-            <!-- filters  -->
-            <div class="freq-filters">
-                <div class='filter-one'>
-                    <span>Filter Type:</span>
-                    <select id="filterType">
-                        <option value="lowpass" selected="selected">Lowpass</option>
-                        <option value="bandpass">Bandpass</option>
-                        <option value="highpass">Highpass</option>
-                    </select>
-                    <span>Filter Frequency:</span>
-                    <input id="filterFrequency" type="range" min="20" max="10000.0"
-                    step="10" value="350.0">
-                    <span>Filter Resonance:</span>
-                    <input id="filterResonance" type="range" min="1.0" max="30.0" step=".05" value="1">
-                </div>
-            </div>
-            <div class="lfo-section">
-                <span>LFO:</span>
-                <div id="lfo-buttons">
-                    <button class="lfo-button" id="lfo-amp">Volume</button>
-                    <button class="lfo-button" id="lfo-pitch">Pitch</button>
-                    <button class="lfo-button" id="lfo-filter">Filter</button>
-                </div>
-                <div id="lfo-controls">
-                    <span>Depth:</span>
-                    <input type="range" min="0" max="1" step=".05" value="0" id="lfo-depth">
-                    <span>Frequency:</span>
-                    <input type="range" min="0" max="12" step=".05" value="0" id="lfo-frequency">
-                </div>
-            </div>
-            <div class="asdr-envelope">
-                <span>Amp Envelope:</span>
-                <div id="asdr-controls">
-                    <span>Attack:</span>
-                    <input type="range" min="0" max="2" step=".1" 
-                    value="0" id="attack-envelope">
-                    <span>Release:</span>
-                    <input type="range" min="0" max ="2" step=".1"
-                    value="0" id="release-envelope">
-                </div>
-            </div>
-
-            <div class="effects">
-                <div class="effects-buttons">
-                    <button id="reverb-button">Reverb</button>
-                    <button id="delay-button">Delay</button>
-                </div>
-                <div class="effects-inputs">
-                    <span>Delay Time:</span>
-                    <input type="range" id="delay-time" min="0" max="1" value=".5" step="0.05">
-                    <span>Delay Feedback</span>
-                    <input type="range" id="feedback" min="0" max=".95" value=".5" step="0.05">
+                <div class="effects">
+                    <div class="effects-buttons">
+                        <button id="reverb-button">Reverb</button>
+                        <button id="delay-button">Delay</button>
+                    </div>
+                    <div class="effects-inputs">
+                        <span>Delay Time:</span>
+                        <input type="range" id="delay-time" min="0" max="1" value=".5" step="0.05">
+                        <span>Delay Feedback</span>
+                        <input type="range" id="feedback" min="0" max=".95" value=".5" step="0.05">
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- keyboard  -->
-    <div class="keyboard-container">
-        <div class="keyboard">
-            <div class=white-key id="C">
-                <div class="black-key" id="Csharp"></div>
+        <!-- keyboard  -->
+        <div class="keyboard-container">
+            <div class="octave-control">
+                <input type="range" min="1" max="5" step="1" value="3" id="octave-control">
+                <span>Octave Control<z/span>
             </div>
+            <div class="keyboard">
+                <div class=white-key id="C">
+                    <div class="black-key" id="Csharp"></div>
+                </div>
 
-            <div class=white-key id="D">
-                <div class="black-key" id="Dsharp"></div>
-            </div>
+                <div class=white-key id="D">
+                    <div class="black-key" id="Dsharp"></div>
+                </div>
 
-            <div class=white-key id="E">
-            </div>
+                <div class=white-key id="E">
+                </div>
 
-            <div class=white-key id="F">
-                <div class="black-key" id="Fsharp"></div>
-            </div>
+                <div class=white-key id="F">
+                    <div class="black-key" id="Fsharp"></div>
+                </div>
 
-            <div class=white-key id="G">
-                <div class="black-key" id="Gsharp"></div>
-            </div>
+                <div class=white-key id="G">
+                    <div class="black-key" id="Gsharp"></div>
+                </div>
 
-            <div class=white-key id="A">
-                <div class="black-key" id="Asharp"></div>
-            </div>
+                <div class=white-key id="A">
+                    <div class="black-key" id="Asharp"></div>
+                </div>
 
-            <div class=white-key id="B">
-            </div>
+                <div class=white-key id="B">
+                </div>
 
-            <div class=white-key id="C2">
-                <div class="black-key" id="Csharp2"></div>
-            </div>
+                <div class=white-key id="C2">
+                    <div class="black-key" id="Csharp2"></div>
+                </div>
 
-            <div class=white-key id="D2">
-                <div class="black-key" id="Dsharp2"></div>
-            </div>
+                <div class=white-key id="D2">
+                    <div class="black-key" id="Dsharp2"></div>
+                </div>
 
-            <div class=white-key id="E2">
-            </div>
+                <div class=white-key id="E2">
+                </div>
 
-            <div class=white-key id="F2">
-                <div class="black-key" id="Fsharp2"></div>
-            </div>
+                <div class=white-key id="F2">
+                    <div class="black-key" id="Fsharp2"></div>
+                </div>
 
-            <div class=white-key id="G2">
-                <div class="black-key" id="Gsharp2"></div>
-            </div>
+                <div class=white-key id="G2">
+                    <div class="black-key" id="Gsharp2"></div>
+                </div>
 
-            <div class=white-key id="A2">
-                <div class="black-key" id="Asharp2"></div>
-            </div>
+                <div class=white-key id="A2">
+                    <div class="black-key" id="Asharp2"></div>
+                </div>
 
-            <div class=white-key id="B2">
+                <div class=white-key id="B2">
+                </div>
             </div>
         </div>
     </div>
