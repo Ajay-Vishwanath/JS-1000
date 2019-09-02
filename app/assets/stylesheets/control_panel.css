@@ -8,3 +8,64 @@
     display: grid;
     grid-template-columns: 1fr 1.6fr 1fr;
 }
+
+.control-panel-left{
+    margin-left: 5px;
+}
+
+.oscillators{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.freq-filters{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.control-panel-middle{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.synth-name{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    height: 70%;
+    font-family:  'Roboto', sans-serif;
+    font-size: 36px;
+    font-weight: bold; 
+}
+
+.lfo-section{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.lfo-proper{
+    display: flex;
+}
+
+#lfo-buttons{
+    display: flex;
+    flex-direction: column; 
+}
+
+
+.control-panel-right{
+    margin-right: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; 
+}
+
+.effects{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.asdr-envelope{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}

@@ -7,7 +7,8 @@
     <title>JS-1000</title>
     <link rel="stylesheet" href="app/assets/stylesheets/keyboard.css">
         <link rel="stylesheet" href="app/assets/stylesheets/main.css">
-            <link rel="stylesheet" href="app/assets/stylesheets/control_panel.css">
+        <link rel="stylesheet" href="app/assets/stylesheets/control_panel.css">
+        <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="synth-body"> 
@@ -18,13 +19,14 @@
                 <div class="control-panel-left">
                     <!-- oscillators  -->
                     <div class="oscillators">
+                        <span>WAVEFORM</span>
                         <div class="oscillator-one">
-                        <span>Waveform</span>
                             <select id="waveform">
                                 <option value="sine">Sine</option>
                                 <option value="square">Square</option>
                                 <option value="triangle">Triangle</option>
                             </select>
+                            <br/> 
                             <!-- <span>Gain</span> -->
                             <input type="range" min="0" max="1" step="0.1" value="0.5" id="gain">
                         </div>
@@ -32,16 +34,18 @@
 
                     <!-- filters  -->
                     <div class="freq-filters">
+                        <span>FILTER</span>
                         <div class='filter-one'>
-                            <span>Filter</span>
                             <select id="filterType">
                                 <option value="lowpass" selected="selected">Lowpass</option>
                                 <option value="bandpass">Bandpass</option>
                                 <option value="highpass">Highpass</option>
                             </select>
+                            <br />
                             <!-- <span>Filter Frequency:</span> -->
                             <input id="filterFrequency" type="range" min="20" max="10000.0"
                             step="10" value="350.0">
+                            <br />
                             <!-- <span>Filter Resonance:</span> -->
                             <input id="filterResonance" type="range" min="1.0" max="30.0" step=".05" value="1">
                         </div>
@@ -56,17 +60,20 @@
 
                     <!-- LFO  -->
                     <div class="lfo-section">
-                        <span>LFO:</span>
-                        <div id="lfo-buttons">
-                            <button class="lfo-button" id="lfo-amp">Volume</button>
-                            <button class="lfo-button" id="lfo-pitch">Pitch</button>
-                            <button class="lfo-button" id="lfo-filter">Filter</button>
-                        </div>
-                        <div id="lfo-controls">
-                            <!-- <span>Depth:</span> -->
-                            <input type="range" min="0" max="1" step=".05" value="0" id="lfo-depth">
-                            <!-- <span>Frequency:</span> -->
-                            <input type="range" min="0" max="12" step=".05" value="0" id="lfo-frequency">
+                        <span>LFO</span>
+                        <div class=lfo-proper>
+                            <div id="lfo-buttons">
+                                <button class="lfo-button" id="lfo-amp">Volume</button>
+                                <button class="lfo-button" id="lfo-pitch">Pitch</button>
+                                <button class="lfo-button" id="lfo-filter">Filter</button>
+                            </div>
+                            <div id="lfo-controls">
+                                <!-- <span>Depth:</span> -->
+                                <input type="range" min="0" max="1" step=".05" value="0" id="lfo-depth">
+                                <br />
+                                <!-- <span>Frequency:</span> -->
+                                <input type="range" min="0" max="12" step=".05" value="0" id="lfo-frequency">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -74,6 +81,7 @@
                 <div class="control-panel-right">
                     <!-- Effects  -->
                     <div class="effects">
+                        <span>FX</span>
                         <div class="effects-buttons">
                             <button id="reverb-button">Reverb</button>
                             <button id="delay-button">Delay</button>
@@ -81,6 +89,7 @@
                         <div class="effects-inputs">
                             <!-- <span>Delay Time:</span> -->
                             <input type="range" id="delay-time" min="0" max="1" value=".5" step="0.05">
+                            <br />
                             <!-- <span>Delay Feedback</span> -->
                             <input type="range" id="feedback" min="0" max=".95" value=".5" step="0.05">
                         </div>
@@ -88,10 +97,11 @@
 
                     <!-- ASDR  -->
                     <div class="asdr-envelope">
-                        <span>Amp Envelope:</span>
+                        <span>AMP</span>
                         <div id="asdr-controls">
                             <!-- <span>Attack:</span> -->
                             <input type="range" min="0" max="2" step=".1" value="0" id="attack-envelope">
+                            <br />
                             <!-- <span>Release:</span> -->
                             <input type="range" min="0" max="2" step=".1" value="0" id="release-envelope">
                         </div>
