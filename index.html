@@ -19,7 +19,8 @@
                 <div class="control-panel-left">
                     <!-- oscillators  -->
                     <div class="oscillators">
-                        <span>WAVEFORM</span>
+                        <span class="module-label">WAVEFORM</span>
+                        <br/>
                         <div class="oscillator-one">
                             <select id="waveform">
                                 <option value="sine">Sine</option>
@@ -70,7 +71,6 @@
                             <div id="lfo-controls">
                                 <!-- <span>Depth:</span> -->
                                 <input type="range" min="0" max="1" step=".05" value="0" id="lfo-depth">
-                                <br />
                                 <!-- <span>Frequency:</span> -->
                                 <input type="range" min="0" max="12" step=".05" value="0" id="lfo-frequency">
                             </div>
@@ -82,16 +82,18 @@
                     <!-- Effects  -->
                     <div class="effects">
                         <span>FX</span>
-                        <div class="effects-buttons">
-                            <button id="reverb-button">Reverb</button>
-                            <button id="delay-button">Delay</button>
-                        </div>
-                        <div class="effects-inputs">
-                            <!-- <span>Delay Time:</span> -->
-                            <input type="range" id="delay-time" min="0" max="1" value=".5" step="0.05">
-                            <br />
-                            <!-- <span>Delay Feedback</span> -->
-                            <input type="range" id="feedback" min="0" max=".95" value=".5" step="0.05">
+                        <div class="effects-main">
+                            <div class="effects-buttons">
+                                <button id="reverb-button">Reverb</button>
+                                <button id="delay-button">Delay</button>
+                            </div>
+                            <div class="effects-inputs">
+                                <!-- <span>Delay Time:</span> -->
+                                <input type="range" id="delay-time" min="0" max="1" value=".5" step="0.05">
+                                <br />
+                                <!-- <span>Delay Feedback</span> -->
+                                <input type="range" id="feedback" min="0" max=".95" value=".5" step="0.05">
+                            </div>
                         </div>
                     </div>
 
@@ -117,7 +119,7 @@
                     <input type="range" min="1" max="5" step="1" value="3" id="octave-control">
                 </div>
                 <div class="octave-control-text-container">
-                    <span id="octave-control-text">Octave Control<z/span>
+                    <span id="octave-control-text">OCTAVE CONTROL<z/span>
                 </div>
             </div>
 
@@ -180,7 +182,7 @@
                     <input type="range" min="0.0" max="1.0" step="0.1" value="0.5" id="volume">
                 </div>
                 <div class="master-volume-text-container">
-                    <span id="master-volume-text">Master Volume</span>
+                    <span id="master-volume-text">MASTER VOLUME</span>
                 </div>
             </div>
         </div>

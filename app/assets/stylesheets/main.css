@@ -7,6 +7,8 @@ body{
 .synth-body{
     margin: 0 auto; 
     width: 1218px; 
+    border: 5px solid #333;
+    z-index: 1;
 }
 
 span{

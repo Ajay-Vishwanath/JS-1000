@@ -10,17 +10,34 @@
 }
 
 .control-panel-left{
-    margin-left: 5px;
+    padding-left: 5px;
 }
 
 .oscillators{
     padding-top: 10px;
     padding-bottom: 10px;
+    display: inline-block;
+    text-align: center; 
+    /* display: flex;
+    flex-direction: column; */
 }
+
+.oscillator-one{
+    border: 1px solid #333;
+    padding: 5px;
+}
+
 
 .freq-filters{
     padding-top: 10px;
     padding-bottom: 10px;
+    display: inline-block;
+    text-align: center;
+}
+
+.filter-one{
+    border: 1px solid #333;
+    padding: 5px;
 }
 
 .control-panel-middle{
@@ -32,19 +49,23 @@
 .synth-name{
     padding-top: 10px;
     padding-bottom: 10px;
-    height: 70%;
+    height: 60%;
     font-family:  'Roboto', sans-serif;
     font-size: 36px;
-    font-weight: bold; 
+    font-weight: bolder; 
 }
 
 .lfo-section{
     padding-top: 10px;
     padding-bottom: 10px;
+    display: inline-block;
+    text-align: center;
 }
 
 .lfo-proper{
     display: flex;
+    border: 1px solid #333;
+    padding: 5px;
 }
 
 #lfo-buttons{
@@ -52,6 +73,11 @@
     flex-direction: column; 
 }
 
+#lfo-controls{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 
 .control-panel-right{
     margin-right: 5px;
@@ -63,9 +89,23 @@
 .effects{
     padding-top: 10px;
     padding-bottom: 10px;
+    display: inline-block;
+    text-align: center; 
+}
+
+.effects-main{
+    border: 1px solid #333;
+    padding: 5px;
 }
 
 .asdr-envelope{
     padding-top: 10px;
     padding-bottom: 10px;
+    display: inline-block;
+    text-align: center;
+}
+
+#asdr-controls{
+    border: 1px solid #333;
+    padding: 5px;
 }

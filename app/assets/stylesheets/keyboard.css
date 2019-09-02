@@ -6,9 +6,9 @@
 
 .keyboard{
     width: 1008px; 
-    height: 300px;
     display: flex; 
     border: 5px solid black; 
+    z-index: 50;
 }
 
 .white-key{
