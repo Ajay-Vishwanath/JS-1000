@@ -304,6 +304,8 @@ function () {
         this.source = null;
         this.depth.disconnect();
         this.maxAmount = 0;
+        var button = document.getElementById(source);
+        button.style.background = null;
       } else if (source === "amp") {
         this.source = "amp";
         this.depth.disconnect();
@@ -311,6 +313,8 @@ function () {
         this.maxAmount = 1;
         this.depth.gain.value = parseFloat(this.lfoDepthControl.value * this.maxAmount);
         this.osc.frequency.value = parseFloat(this.lfoFrequencyControl.value);
+        var volumeButton = document.getElementById('amp');
+        volumeButton.style.background = "#9ad1fd";
       } else if (source === "filter") {
         this.source = "filter";
         this.depth.disconnect();
@@ -318,10 +322,14 @@ function () {
         this.maxAmount = 8000;
         this.depth.gain.value = parseFloat(this.lfoDepthControl.value * this.maxAmount);
         this.osc.frequency.value = parseFloat(this.lfoFrequencyControl.value);
-      } else if (source === "frequency") {
+        var filterButton = document.getElementById('filter');
+        filterButton.style.background = "#9ad1fd";
+      } else if (source === "pitch") {
         this.maxAmount = 25;
         this.depth.gain.value = parseFloat(this.lfoDepthControl.value * this.maxAmount);
         this.osc.frequency.value = parseFloat(this.lfoFrequencyControl.value);
+        var frequencyButton = document.getElementById("pitch");
+        frequencyButton.style.background = "#9ad1fd";
       }
     }
   }]);
@@ -1035,11 +1043,11 @@ function () {
     window.addEventListener('mousedown', this.mouseDown.bind(this), false);
     window.addEventListener('mouseup', this.mouseUp.bind(this), false);
     this.lfoMode = "";
-    this.lfoVolume = document.getElementById('lfo-amp');
+    this.lfoVolume = document.getElementById('amp');
     this.lfoVolume.addEventListener('click', this.setLfoVolume.bind(this), false);
-    this.lfoPitch = document.getElementById('lfo-pitch');
+    this.lfoPitch = document.getElementById('pitch');
     this.lfoPitch.addEventListener('click', this.setLfoPitch.bind(this), false);
-    this.lfoFilter = document.getElementById('lfo-filter');
+    this.lfoFilter = document.getElementById('filter');
     this.lfoFilter.addEventListener('click', this.setLfoFilter.bind(this), false);
     this.reverbSwitch = document.getElementById('reverb-button');
     this.reverbSwitch.addEventListener('click', this.setReverb.bind(this), false);
@@ -1098,6 +1106,8 @@ function () {
         this.lfoMode = "pitch";
       } else {
         this.lfoMode = "";
+        var pitchButton = document.getElementById("pitch");
+        pitchButton.style.background = null;
       }
     }
   }, {
@@ -1117,6 +1127,8 @@ function () {
       if (this.reverbStatus === "off") {
         this.filter.filter.disconnect();
         this.filter.filter.connect(this.reverb.reverb);
+        var reverbButton = document.getElementById('reverb-button');
+        reverbButton.style.background = "#9ad1fd";
 
         if (this.delayStatus === "on") {
           this.reverb.reverb.connect(this.delay.delay);
@@ -1129,6 +1141,8 @@ function () {
       } else {
         this.filter.filter.disconnect();
         this.reverb.reverb.disconnect();
+        var reverbButton = document.getElementById('reverb-button');
+        reverbButton.style.background = null;
 
         if (this.delayStatus === "on") {
           this.filter.filter.connect(this.delay.delay);
@@ -1156,6 +1170,8 @@ function () {
 
         this.delay.delay.connect(this.masterVolume);
         this.delayStatus = "on";
+        var delayButton = document.getElementById('delay-button');
+        delayButton.style.background = "#9ad1fd";
       } else {
         this.delay.delay.disconnect(this.masterVolume);
 
@@ -1168,6 +1184,8 @@ function () {
         }
 
         this.delayStatus = "off";
+        var delayButton = document.getElementById('delay-button');
+        delayButton.style.background = null;
       }
     } // keyboard control 
 
@@ -1199,7 +1217,7 @@ function () {
         this.playNote(key);
         var div = this.notetable.correspondingDiv[key + 'a'];
         var correspondingKey = document.getElementById(div);
-        correspondingKey.style.backgroundColor = '#ccf';
+        correspondingKey.style.backgroundColor = '#9ad1fd';
       }
     }
   }, {
@@ -1224,7 +1242,7 @@ function () {
       if (this.notetable.octave[key] && !this.activeNotes[key]) {
         this.playNote(key);
         var correspondingKey = document.getElementById(key);
-        correspondingKey.style.backgroundColor = '#ccf';
+        correspondingKey.style.backgroundColor = '#9ad1fd';
       }
     }
   }, {
@@ -1253,9 +1271,9 @@ function () {
         var pitchLfo = new _lfos__WEBPACK_IMPORTED_MODULE_4__["default"]({
           context: this.ctx
         });
-        this.lfo.source = "frequency";
+        this.lfo.source = "pitch";
         this.lfo.depth.disconnect();
-        pitchLfo.setParams(null, "frequency");
+        pitchLfo.setParams(null, "pitch");
         pitchLfo.depth.connect(osc.osc.frequency);
       }
 

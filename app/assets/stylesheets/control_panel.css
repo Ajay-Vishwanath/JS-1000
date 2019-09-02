@@ -23,10 +23,14 @@
 }
 
 .oscillator-one{
+    margin-top: 3px;
     border: 1px solid #333;
     padding: 5px;
 }
 
+#waveform{
+    margin-bottom: 5px;
+}
 
 .freq-filters{
     padding-top: 10px;
@@ -36,8 +40,13 @@
 }
 
 .filter-one{
+    margin-top: 3px;
     border: 1px solid #333;
     padding: 5px;
+}
+
+#filterType{
+    margin-bottom: 5px;
 }
 
 .control-panel-middle{
@@ -47,7 +56,7 @@
 }
 
 .synth-name{
-    padding-top: 10px;
+    padding-top: 40px;
     padding-bottom: 10px;
     height: 60%;
     font-family:  'Roboto', sans-serif;
@@ -63,6 +72,7 @@
 }
 
 .lfo-proper{
+    margin-top: 3px;
     display: flex;
     border: 1px solid #333;
     padding: 5px;
@@ -77,6 +87,14 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+#lfo-amp{
+    margin-bottom: 5px;
+}
+
+#lfo-pitch{
+    margin-bottom: 5px;
 }
 
 .control-panel-right{
@@ -94,8 +112,13 @@
 }
 
 .effects-main{
+    margin-top: 3px;
     border: 1px solid #333;
     padding: 5px;
+}
+
+.effects-buttons{
+    margin-bottom: 5px;
 }
 
 .asdr-envelope{
@@ -106,6 +129,7 @@
 }
 
 #asdr-controls{
+    margin-top: 3px;
     border: 1px solid #333;
     padding: 5px;
 }

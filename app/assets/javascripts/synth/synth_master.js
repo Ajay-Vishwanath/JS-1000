@@ -33,11 +33,11 @@ class Synth {
         window.addEventListener('mouseup', this.mouseUp.bind(this), false);
 
         this.lfoMode = "";
-        this.lfoVolume = document.getElementById('lfo-amp')
+        this.lfoVolume = document.getElementById('amp')
         this.lfoVolume.addEventListener('click', this.setLfoVolume.bind(this), false);
-        this.lfoPitch = document.getElementById('lfo-pitch')
+        this.lfoPitch = document.getElementById('pitch')
         this.lfoPitch.addEventListener('click', this.setLfoPitch.bind(this), false);
-        this.lfoFilter = document.getElementById('lfo-filter')
+        this.lfoFilter = document.getElementById('filter')
         this.lfoFilter.addEventListener('click', this.setLfoFilter.bind(this), false);
 
         this.reverbSwitch = document.getElementById('reverb-button')
@@ -91,6 +91,8 @@ class Synth {
             this.lfoMode = "pitch"
         } else {
             this.lfoMode = ""
+            var pitchButton = document.getElementById("pitch")
+            pitchButton.style.background = null;
         }
     }
 
@@ -108,6 +110,8 @@ class Synth {
         if (this.reverbStatus === "off"){
             this.filter.filter.disconnect()
             this.filter.filter.connect(this.reverb.reverb)
+            var reverbButton = document.getElementById('reverb-button')
+            reverbButton.style.background = "#9ad1fd"
             if (this.delayStatus === "on"){
                 this.reverb.reverb.connect(this.delay.delay)
                 this.reverb.reverb.connect(this.masterVolume)
@@ -118,6 +122,8 @@ class Synth {
         } else {
             this.filter.filter.disconnect()
             this.reverb.reverb.disconnect()
+            var reverbButton = document.getElementById('reverb-button')
+            reverbButton.style.background = null
             if (this.delayStatus === "on") {
                 this.filter.filter.connect(this.delay.delay)
                 this.filter.filter.connect(this.masterVolume)
@@ -141,6 +147,8 @@ class Synth {
             }
             this.delay.delay.connect(this.masterVolume)
             this.delayStatus = "on"
+            var delayButton = document.getElementById('delay-button')
+            delayButton.style.background = "#9ad1fd"
         } else {
             this.delay.delay.disconnect(this.masterVolume)
             if (this.reverbStatus === "on"){
@@ -151,6 +159,8 @@ class Synth {
                 this.filter.filter.connect(this.masterVolume)
             }
             this.delayStatus = "off"
+            var delayButton = document.getElementById('delay-button')
+            delayButton.style.background = null
         }
     }
 
@@ -180,7 +190,7 @@ class Synth {
             this.playNote(key);
             var div = this.notetable.correspondingDiv[key + 'a']
             var correspondingKey = document.getElementById(div)
-            correspondingKey.style.backgroundColor = '#ccf'
+            correspondingKey.style.backgroundColor = '#9ad1fd'
         }
     }
 
@@ -202,7 +212,7 @@ class Synth {
         if (this.notetable.octave[key] && !this.activeNotes[key]) {
             this.playNote(key);
             var correspondingKey = document.getElementById(key)
-            correspondingKey.style.backgroundColor = '#ccf'
+            correspondingKey.style.backgroundColor = '#9ad1fd'
         }
     }
 
@@ -223,9 +233,9 @@ class Synth {
         osc.osc.frequency.setValueAtTime(this.notetable.octave[key], this.ctx.currentTime)
         if (this.lfoMode === "pitch") {
             const pitchLfo = new LFO({ context: this.ctx })
-            this.lfo.source = "frequency"
+            this.lfo.source = "pitch"
             this.lfo.depth.disconnect();
-            pitchLfo.setParams(null, "frequency")
+            pitchLfo.setParams(null, "pitch")
             pitchLfo.depth.connect(osc.osc.frequency)
         } 
         this.activeNotes[key] = osc

@@ -33,6 +33,8 @@ class LFO {
             this.source = null 
             this.depth.disconnect()
             this.maxAmount = 0 
+            var button = document.getElementById(source)
+            button.style.background = null;
         }
         else if (source === "amp"){
             this.source = "amp"
@@ -41,6 +43,8 @@ class LFO {
             this.maxAmount = 1
             this.depth.gain.value = parseFloat(this.lfoDepthControl.value * this.maxAmount)
             this.osc.frequency.value = parseFloat(this.lfoFrequencyControl.value)
+            var volumeButton = document.getElementById('amp')
+            volumeButton.style.background = "#9ad1fd"
         } else if (source === "filter"){
             this.source = "filter"
             this.depth.disconnect();
@@ -48,10 +52,14 @@ class LFO {
             this.maxAmount = 8000
             this.depth.gain.value = parseFloat(this.lfoDepthControl.value * this.maxAmount)
             this.osc.frequency.value = parseFloat(this.lfoFrequencyControl.value)
-        } else if (source === "frequency"){
+            var filterButton = document.getElementById('filter')
+            filterButton.style.background = "#9ad1fd"
+        } else if (source === "pitch"){
             this.maxAmount = 25;
             this.depth.gain.value = parseFloat(this.lfoDepthControl.value * this.maxAmount)
             this.osc.frequency.value = parseFloat(this.lfoFrequencyControl.value)
+            var frequencyButton = document.getElementById("pitch")
+            frequencyButton.style.background = "#9ad1fd"
         }
     }
 }
