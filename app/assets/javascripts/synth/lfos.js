@@ -58,8 +58,6 @@ class LFO {
             this.maxAmount = 25;
             this.depth.gain.value = parseFloat(this.lfoDepthControl.value * this.maxAmount)
             this.osc.frequency.value = parseFloat(this.lfoFrequencyControl.value)
-            var frequencyButton = document.getElementById("pitch")
-            frequencyButton.style.background = "#9ad1fd"
         }
     }
 }

@@ -328,8 +328,6 @@ function () {
         this.maxAmount = 25;
         this.depth.gain.value = parseFloat(this.lfoDepthControl.value * this.maxAmount);
         this.osc.frequency.value = parseFloat(this.lfoFrequencyControl.value);
-        var frequencyButton = document.getElementById("pitch");
-        frequencyButton.style.background = "#9ad1fd";
       }
     }
   }]);
@@ -1093,8 +1091,13 @@ function () {
     value: function setLfoVolume() {
       this.lfo.setParams(this.masterVolume.gain, "amp");
 
-      if (this.lfoMode !== "volume") {
-        this.lfoMode = "volume";
+      if (this.lfoMode !== "amp") {
+        if (this.lfoMode !== "") {
+          var previousButton = document.getElementById(this.lfoMode);
+          previousButton.style.background = null;
+        }
+
+        this.lfoMode = "amp";
       } else {
         this.lfoMode = "";
       }
@@ -1103,7 +1106,14 @@ function () {
     key: "setLfoPitch",
     value: function setLfoPitch() {
       if (this.lfoMode !== "pitch") {
+        if (this.lfoMode !== "") {
+          var previousButton = document.getElementById(this.lfoMode);
+          previousButton.style.background = null;
+        }
+
         this.lfoMode = "pitch";
+        var frequencyButton = document.getElementById("pitch");
+        frequencyButton.style.background = "#9ad1fd";
       } else {
         this.lfoMode = "";
         var pitchButton = document.getElementById("pitch");
@@ -1116,6 +1126,11 @@ function () {
       this.lfo.setParams(this.filter.filter.frequency, "filter");
 
       if (this.lfoMode !== "filter") {
+        if (this.lfoMode !== "") {
+          var previousButton = document.getElementById(this.lfoMode);
+          previousButton.style.background = null;
+        }
+
         this.lfoMode = "filter";
       } else {
         this.lfoMode = "";
