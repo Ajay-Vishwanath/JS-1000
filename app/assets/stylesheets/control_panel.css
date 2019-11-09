@@ -24,7 +24,7 @@
 
 .oscillator-one{
     margin-top: 3px;
-    border: 1px solid #333;
+    border: 2px solid #333;
     padding: 5px;
 }
 
@@ -41,7 +41,7 @@
 
 .filter-one{
     margin-top: 3px;
-    border: 1px solid #333;
+    border: 2px solid #333;
     padding: 5px;
 }
 
@@ -60,7 +60,7 @@
     padding-bottom: 10px;
     height: 60%;
     font-family:  'Roboto', sans-serif;
-    font-size: 36px;
+    font-size: 40px;
     font-weight: bolder; 
 }
 
@@ -74,7 +74,7 @@
 .lfo-proper{
     margin-top: 3px;
     display: flex;
-    border: 1px solid #333;
+    border: 2px solid #333;
     padding: 5px;
 }
 
@@ -113,7 +113,7 @@
 
 .effects-main{
     margin-top: 3px;
-    border: 1px solid #333;
+    border: 2px solid #333;
     padding: 5px;
 }
 
@@ -130,6 +130,23 @@
 
 #asdr-controls{
     margin-top: 3px;
-    border: 1px solid #333;
+    border: 2px solid #333;
     padding: 5px;
+}
+
+button {
+    cursor: pointer; 
+    font-family:  'Roboto', sans-serif;
+    font-weight: bold; 
+    border-radius: 3px;
+    border-color: black; 
+}
+
+button:hover{
+    border: 1px solid #9ad1fd;
+}
+
+select {
+    font-family:  'Roboto', sans-serif;
+    border-color: black; 
 }
